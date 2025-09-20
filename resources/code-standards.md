@@ -2,6 +2,7 @@
 
 These rules exist to make code clear, consistent, and maintainable.
 Follow them as instructions, not suggestions.
+Do not concern yourself with linting. There are more appropriate tools for that.
 
 ---
 
