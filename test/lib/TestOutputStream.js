@@ -4,9 +4,7 @@ import Debug from 'debug';
 
 const debug = Debug('mcp:server');
 
-
 class TestOutputStream extends Writable {
-  #buffer = '';
   #queue = [];
 
   waitForReply() {

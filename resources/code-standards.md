@@ -15,7 +15,8 @@ Follow them as instructions, not suggestions.
 
 ## 2. Functions
 - Keep functions small and focused on one task only.
-- Functions must contain no more than **8 executable statements** (as opposed to lines).
+- Functions must contain no more than **6 significant executable statements** (as opposed to lines).
+  - Do not count statements that are inlined into function calls or map values
 - Function names must use verbs to describe the action.
 - Do not use more than two parameters.
 - Functions must not cause hidden side effects.
