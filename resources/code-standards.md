@@ -7,14 +7,14 @@ Follow them as instructions, not suggestions.
 
 ## 1. Naming
 - Always use descriptive names for variables, functions, classes, and files.
-- Never use abbreviations or short codes.
+- Never use abbreviations or short codes unless they are industry standard or extremely common (e.g. tx for transaction, cb for callback)
 - The name must reveal the intent of the code.
-
+- When parameters clearly indicate the data type or purpose, prefer concise function names over verbose alternatives.
 ---
 
 ## 2. Functions
 - Keep functions small and focused on one task only.
-- Functions must contain no more than **4 executable statements**.
+- Functions must contain no more than **4 executable statements** (as opposed to lines).
 - Function names must use verbs to describe the action.
 - Do not use more than two parameters.
 - Functions must not cause hidden side effects.
@@ -41,8 +41,7 @@ Follow them as instructions, not suggestions.
 ---
 
 ## 4. Comments
-- Only include comments when explicitly instructed.
-- Use comments only to explain *why* code exists, never to describe *what* it does.
+- Use comments only to explain *why* mysterious code exists, never to describe *what* code does.
 - Delete or update outdated comments.
 - Prefer self-explanatory code over comments.
 

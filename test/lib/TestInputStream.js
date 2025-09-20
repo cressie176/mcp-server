@@ -7,12 +7,12 @@ const debug = Debug('mcp:client');
 class TestInputStream extends Readable {
 
   _read() {
-    // Required for Readable streams, but we push data manually
+    // Empty implementation prevents test blocking - Readable stream contract requires this method
   }
 
   send(json) {
-    debug(json.replace(EOL, ''));
-    this.push(json);
+    debug(json);
+    this.push(json + `\n`);
   }
 
   end() {

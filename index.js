@@ -5,13 +5,13 @@ import Server from './src/Server.js';
 
 const server = new Server();
 
-process.on('SIGINT', interupt);
-process.on('SIGTERM', interupt);
+process.on('SIGINT', interrupt);
+process.on('SIGTERM', interrupt);
 
 await server.start();
 
-async function interupt() {
-  process.off('SIGINT', interupt);
-  process.off('SIGTERM', interupt);
+async function interrupt() {
+  process.off('SIGINT', interrupt);
+  process.off('SIGTERM', interrupt);
   await server.stop();
 }

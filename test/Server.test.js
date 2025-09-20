@@ -32,6 +32,7 @@ describe('Server', () => {
       const { result: { resources } } = await send({ method: 'resources/list' });
       eq(resources.length, 1);
       eq(resources[0].name, 'code-standards');
+      eq(resources[0].title, 'code-standards');
       eq(resources[0].uri, 'https://raw.githubusercontent.com/cressie176/prompts/refs/heads/main/resources/code-standards.md');
     });
 
@@ -53,7 +54,7 @@ describe('Server', () => {
       const { result: { prompts } } = await send({ method: 'prompts/list' });
       eq(prompts.length, 1);
       eq(prompts[0].name, 'code-review');
-      eq(prompts[0].title, 'Code Review');
+      eq(prompts[0].title, 'code-review');
       eq(prompts[0].description, 'Requests a code review');
     });
 
@@ -71,7 +72,7 @@ describe('Server', () => {
     const response = stdout.waitForResponse()
     const id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1;
     const json = JSON.stringify({ jsonrpc: '2.0', id, ...params });
-    stdin.send(json + '\n');
+    stdin.send(json);
     return response;
   }
 });

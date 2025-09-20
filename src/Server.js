@@ -32,7 +32,7 @@ class Server {
       'code-standards',
       'https://raw.githubusercontent.com/cressie176/prompts/refs/heads/main/resources/code-standards.md',
       {
-        title: 'ACME Code Standards',
+        title: 'code-standards',
         description: 'Latest ACME coding standards from GitHub',
         mimeType: 'text/markdown'
       },
@@ -51,7 +51,7 @@ class Server {
 
   #registerCodeReview() {
     this.#server.registerPrompt('code-review', {
-      title: 'CodeReview',
+      title: 'code-review',
       description: 'Requests a code review',
     },
     () => {
