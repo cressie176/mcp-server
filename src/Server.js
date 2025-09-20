@@ -9,7 +9,7 @@ import path from 'path';
 const currentFileName = fileURLToPath(import.meta.url);
 const currentDirectory = dirname(currentFileName);
 
-class AcmeMcpServer {
+class Server {
 
   #stdin;
   #stdout;
@@ -76,4 +76,4 @@ class AcmeMcpServer {
   }
 }
 
-export default AcmeMcpServer;
+export default Server;

@@ -6,6 +6,9 @@
   "bugs": {
     "url": "https://github.com/cressie176/prompts/issues"
   },
+  "bin": {
+    "start": "./index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cressie176/prompts.git"

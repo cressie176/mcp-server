@@ -1,7 +1,7 @@
 import process from 'node:process';
-import AcmeMcpServer from './src/AcmeMcpServer.js';
+import Server from './src/Server.js';
 
-const server = new AcmeMcpServer();
+const server = new Server();
 
 process.on('SIGINT', interupt);
 process.on('SIGTERM', interupt);

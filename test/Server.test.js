@@ -1,14 +1,14 @@
 import { it, describe, before, after } from 'node:test';
 import { strictEqual as eq, match } from 'node:assert';
-import AcmeMcpServer from '../src/AcmeMcpServer.js';
+import Server from '../src/Server.js';
 import TestInputStream from './lib/TestInputStream.js';
 import TestOutputStream from './lib/TestOutputStream.js';
 
-describe('AcmeMcpServer', () => {
+describe('Server', () => {
 
   const stdin = new TestInputStream();
   const stdout = new TestOutputStream();
-  const server = new AcmeMcpServer({ stdin, stdout });
+  const server = new Server({ stdin, stdout });
 
   before(async () => {
     await server.start();
