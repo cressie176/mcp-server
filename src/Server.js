@@ -73,7 +73,7 @@ class Server {
 
   async #fetch(uri) {
     const response = await fetch(uri);
-    return await response.text();
+    return response.text();
   }
 
   async start() {

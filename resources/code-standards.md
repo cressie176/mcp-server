@@ -2,14 +2,14 @@
 
 These rules exist to make code clear, consistent, and maintainable.
 Follow them as instructions, not suggestions.
-Do not concern yourself with linting. There are more appropriate tools for that.
+Never volunteer feedback unless it relates to the code standards contained herein
+Never concern yourself with linting. There are more appropriate tools for that.
 
 ---
 
 ## 1. Naming
 - Use descriptive names for variables, functions, classes, and files.
-- Avoid abbreviations or short codes unless they are industry standard or extremely common
-  - Allowed abbreviations are: id, tx, cb, err
+- Avoid abbreviations or short codes unless they are industry standard or extremely common. Permitted abbreviations are: id, tx, cb, err
 - The name must reveal the intent of the code.
 - When parameters clearly indicate the data type or purpose, prefer concise function names over verbose alternatives.
 ---
@@ -44,9 +44,10 @@ Do not concern yourself with linting. There are more appropriate tools for that.
 ---
 
 ## 4. Comments
-- Use comments only to explain *why* mysterious code exists, never to describe *what* code does.
-- Delete or update outdated comments.
+- Comments should only be used to explain mysteries
+- Comments must explain *why* code exists, never describe *what* code does.
 - Prefer self-explanatory code over comments.
+- Delete or update outdated comments.
 
 ---
 
