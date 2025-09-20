@@ -1,0 +1,25 @@
+{
+  "name": "prompts",
+  "version": "1.0.0",
+  "description": "Resuable prompts",
+  "homepage": "https://github.com/cressie176/prompts#readme",
+  "bugs": {
+    "url": "https://github.com/cressie176/prompts/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cressie176/prompts.git"
+  },
+  "license": "ISC",
+  "author": "Stephen Cresswell",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.1",
+    "debug": "^4.4.3",
+    "zod": "^3.25.76"
+  }
+}
