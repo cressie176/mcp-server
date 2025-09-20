@@ -2,6 +2,7 @@
 
 These rules exist to make code clear, consistent, and maintainable.
 Follow them as instructions, not suggestions.
+NEVER complain about violations that are unavoidable due to 3rd party code.
 
 ---
 
@@ -13,16 +14,16 @@ Follow them as instructions, not suggestions.
 ---
 
 ## 2. Functions
-- Keep functions small and focused on one task only.
-- Functions must contain no more than **6 significant executable statements**.
-  - Statements that are inlined into function calls NOT significant
-  - Statements that are inlined into map values are NOT significant
 - Function names must use verbs to describe the action.
-- Do not use more than two parameters.
+- Functions should minimise parameters, using ideally no more than two.
+- Functions should eschew boolean parameters since they lead to conditional logic.
+- Functions should be small and focused on one task only, ideally contain no more than **6 significant executable statements**.
+  - Statements that are inlined into function calls are NOT significant
+  - Statements that are inlined into map values are NOT significant
 - Functions must not cause hidden side effects.
-- **Single level of abstraction rule**:
-  - A function must either describe *what* happens (high-level) or *how* it happens (low-level).
-  - Never mix high-level orchestration with low-level details in the same function.
+- Functions should operate at a single level of abstraction
+  - A function must either describe *what* happens (high-level) or *how* it happens (low-level), but not both.
+  - Avoid mixing high-level orchestration with low-level details in the same function, unless it is because of iteration
   - If a function switches between levels (zooming in and out), split it into separate functions.
 
 ---

@@ -1,10 +1,13 @@
 import { stdin, stdout } from 'node:process';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import Debug from 'debug';
+import GitHub from './GitHub.js';
 
-const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/cressie176/mcp-server/refs/heads/main';
+const github = new GitHub({ user: 'cressie176', repository: 'mcp-server' });
 const RESOURCES = [{ name: 'code-standards', description: 'The latest ACME coding standards' }];
 const PROMPTS = [{ name: 'code-review', description: 'Requests a code review' }];
+const debug = Debug('mcp-server');
 
 class Server {
   #stdin;
@@ -28,35 +31,33 @@ class Server {
   }
 
   #init() {
-    this.#registerCodeStandards();
-    this.#registerCodeReview();
+    this.#registerResources();
+    this.#registerPrompts();
   }
 
-  #registerCodeStandards() {
-    RESOURCES.forEach(({ name, description }) =>
-      this.#server.registerResource(
-        name,
-        this.#getResourceUrl(name),
-        this.#getResourceMetaData(name, description),
-        (uri) => this.#fetchResource(uri.href),
-      ),
+  #registerResources() {
+    RESOURCES.forEach((resource) => this.#registerResource(resource));
+  }
+
+  #registerResource({ name, description }) {
+    this.#server.registerResource(
+      name,
+      github.buildResourceUrl(name),
+      this.#getResourceMetaData(name, description),
+      (uri) => this.#fetchResource(uri.href),
     );
   }
 
-  #registerCodeReview() {
-    PROMPTS.forEach(({ name, description }) =>
-      this.#server.registerPrompt(name, this.#getPromptMetaData(name, description), () =>
-        this.#fetchPrompt(this.#getPromptUrl(name)),
-      ),
+  #registerPrompts() {
+    PROMPTS.forEach((prompt) => this.#registerPrompt(prompt));
+  }
+
+  #registerPrompt({ name, description }) {
+    this.#server.registerPrompt(
+      name,
+      this.#getPromptMetaData(name, description),
+      () => this.#fetchPrompt(github.buildPromptUrl(name)),
     );
-  }
-
-  #getResourceUrl(name) {
-    return `${GITHUB_BASE_URL}/resources/${name}.md`;
-  }
-
-  #getPromptUrl(name) {
-    return `${GITHUB_BASE_URL}/prompts/${name}.md`;
   }
 
   #getResourceMetaData(name, description) {
@@ -88,12 +89,11 @@ class Server {
     return { messages };
   }
 
-  async #fetch(uri) {
-    const response = await fetch(uri);
+  async #fetch(url) {
+    debug(`Fetching ${url}`);
+    const response = await fetch(url);
     return response.text();
   }
 }
 
 export default Server;
-
-export { GITHUB_BASE_URL };

@@ -1,8 +1,10 @@
 import { strictEqual as eq, match } from 'node:assert';
 import { after, before, describe, it } from 'node:test';
-import Server, { GITHUB_BASE_URL } from '../src/Server.js';
+import Server from '../src/Server.js';
 import TestInputStream from './lib/TestInputStream.js';
 import TestOutputStream from './lib/TestOutputStream.js';
+
+const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/cressie176/mcp-server/refs/heads/main';
 
 describe('Server', () => {
   const stdin = new TestInputStream();
