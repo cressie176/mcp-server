@@ -2,8 +2,8 @@ class GitHub {
 
   #baseUrl;
 
-  constructor({ user, repository }) {
-    this.#baseUrl = `https://raw.githubusercontent.com/${user}/${repository}/refs/heads/main`;
+  constructor({ user, organisation, repository }) {
+    this.#baseUrl = `https://raw.githubusercontent.com/${user || organisation}/${repository}/refs/heads/main`
   }
 
   buildResourceUrl(name) {

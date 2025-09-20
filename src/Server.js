@@ -1,21 +1,32 @@
 import { stdin, stdout } from 'node:process';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import Debug from 'debug';
-import GitHub from './GitHub.js';
+import z from 'zod';
+import { Eta } from 'eta';
 
-const github = new GitHub({ user: 'cressie176', repository: 'mcp-server' });
 const RESOURCES = [{ name: 'code-standards', description: 'The latest ACME coding standards' }];
-const PROMPTS = [{ name: 'code-review', description: 'Requests a code review' }];
+const CODE_REVIEW_SCOPES = ['all', 'unstaged', 'staged'];
+const PROMPTS = [
+  {
+    name: 'code-review',
+    description: 'Requests a code review',
+    argsSchema: {
+      scope: z.enum(CODE_REVIEW_SCOPES).optional().describe('One of "all", "unstaged" or "staged"')
+    }
+  },
+];
+const eta = new Eta();
 
 class Server {
   #stdin;
   #stdout;
+  #github;
   #server;
 
   constructor(options = { stdin, stdout }) {
     this.#stdin = options.stdin;
     this.#stdout = options.stdout;
+    this.#github = options.github;
     this.#server = new McpServer({ name: 'ACME', version: '1.0.0' });
     this.#init();
   }
@@ -38,11 +49,11 @@ class Server {
     RESOURCES.forEach((resource) => this.#registerResource(resource));
   }
 
-  #registerResource({ name, description }) {
+  #registerResource(resource) {
     this.#server.registerResource(
-      name,
-      github.buildResourceUrl(name),
-      this.#getResourceMetaData(name, description),
+      resource.name,
+      this.#github.buildResourceUrl(resource.name),
+      this.#getResourceMetaData(resource),
       (uri) => this.#fetchResource(uri.href),
     );
   }
@@ -51,20 +62,20 @@ class Server {
     PROMPTS.forEach((prompt) => this.#registerPrompt(prompt));
   }
 
-  #registerPrompt({ name, description }) {
+  #registerPrompt(prompt) {
     this.#server.registerPrompt(
-      name,
-      this.#getPromptMetaData(name, description),
-      () => this.#fetchPrompt(github.buildPromptUrl(name)),
+      prompt.name,
+      this.#getPromptMetaData(prompt),
+      (args) => this.#fetchPrompt(this.#github.buildPromptUrl(prompt.name), args),
     );
   }
 
-  #getResourceMetaData(name, description) {
+  #getResourceMetaData({ name, description }) {
     return { title: name, description, mimeType: 'text/markdown' };
   }
 
-  #getPromptMetaData(name, description) {
-    return { title: name, description };
+  #getPromptMetaData({ name, description, argsSchema }) {
+    return { title: name, description, argsSchema };
   }
 
   async #fetchResource(url) {
@@ -77,8 +88,9 @@ class Server {
     return { contents };
   }
 
-  async #fetchPrompt(url) {
-    const text = await this.#fetch(url);
+  async #fetchPrompt(url, args) {
+    const template = await this.#fetch(url);
+    const text = eta.renderString(template, args)
     return this.#createPrompt(text);
   }
 

@@ -2,8 +2,11 @@
 
 import process from 'node:process';
 import Server from './src/Server.js';
+import GitHub from './src/GitHub.js';
 
-const server = new Server();
+const [,, user, repository] = process.argv;
+const github = new GitHub({ user, repository });
+const server = new Server({ github });
 
 process.on('SIGINT', interrupt);
 process.on('SIGTERM', interrupt);

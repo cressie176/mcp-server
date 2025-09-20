@@ -1,6 +1,7 @@
 import { strictEqual as eq, match } from 'node:assert';
 import { after, before, describe, it } from 'node:test';
 import Server from '../src/Server.js';
+import GitHub from '../src/GitHub.js';
 import TestInputStream from './lib/TestInputStream.js';
 import TestOutputStream from './lib/TestOutputStream.js';
 
@@ -9,7 +10,8 @@ const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/cressie176/mcp-server
 describe('Server', () => {
   const stdin = new TestInputStream();
   const stdout = new TestOutputStream();
-  const server = new Server({ stdin, stdout });
+  const github = new GitHub({ user: 'cressie176', repository: 'mcp-server' })
+  const server = new Server({ stdin, stdout, github });
 
   before(async () => {
     await server.start();
@@ -65,7 +67,7 @@ describe('Server', () => {
     it('prompts/get code-review', async () => {
       const {
         result: { messages },
-      } = await request({ method: 'prompts/get', params: { name: 'code-review' } });
+      } = await request({ method: 'prompts/get', params: { name: 'code-review', arguments: {} } });
       eq(messages.length, 1);
       eq(messages[0].role, 'user');
       eq(messages[0].content.type, 'text');

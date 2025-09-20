@@ -25,10 +25,11 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.18.1",
-    "debug": "^4.4.3",
+    "eta": "^4.0.1",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.2.4"
+    "@biomejs/biome": "^2.2.4",
+    "debug": "^4.4.3"
   }
 }
