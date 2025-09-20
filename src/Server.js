@@ -1,13 +1,14 @@
 import { stdin, stdout } from 'node:process';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import fs from 'fs';
-import path from 'path';
 
-const currentFileName = fileURLToPath(import.meta.url);
-const currentDirectory = dirname(currentFileName);
+const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/cressie176/mcp-server/refs/heads/main';
+const RESOURCES = [
+  { name: 'code-standards', description: 'The latest ACME coding standards' },
+]
+const PROMPTS = [
+  { name: 'code-review', description: 'Requests a code review' }
+]
 
 class Server {
 
@@ -28,42 +29,58 @@ class Server {
   }
 
   #registerCodeStandards() {
-    this.#server.registerResource(
-      'code-standards',
-      'https://raw.githubusercontent.com/cressie176/prompts/refs/heads/main/resources/code-standards.md',
-      {
-        title: 'code-standards',
-        description: 'Latest ACME coding standards from GitHub',
-        mimeType: 'text/markdown'
-      },
-      async (uri) => {
-        const response = await fetch(uri.href);
-        const text = await response.text();
-        return {
-          contents: [{
-            uri: uri.href,
-            text,
-          }]
-        };
-      }
-    )
+    RESOURCES.forEach(
+      ({ name, description }) => this.#server.registerResource(
+        name,
+        this.#getResourceUrl(name),
+        this.#getResourceMetaData(name, description),
+        (uri) => this.#fetchResource(uri.href)
+      )
+    );
   }
 
   #registerCodeReview() {
-    this.#server.registerPrompt('code-review', {
-      title: 'code-review',
-      description: 'Requests a code review',
-    },
-    () => {
-      return {
-        messages: [
-          {
-            role: 'user',
-            content: { type: 'text', text: fs.readFileSync(path.join(currentDirectory, '..', 'prompts', 'code-review.md'), 'utf-8') }
-          }
-        ]
-      }
-    });
+    PROMPTS.forEach(
+      ({ name, description }) => this.#server.registerPrompt(
+        name,
+        this.#getPromptMetaData(name, description),
+        () => this.#fetchPrompt(this.#getPromptUrl(name))
+      )
+    );
+  }
+
+  #getResourceUrl(name) {
+    return `${GITHUB_BASE_URL}/resources/${name}.md`;
+  }
+
+  #getPromptUrl(name) {
+    return `${GITHUB_BASE_URL}/prompts/${name}.md`;
+  };
+
+  #getResourceMetaData(name, description) {
+    return { title: name, description, mimeType: 'text/markdown' };
+  }
+
+  #getPromptMetaData(name, description) {
+    return { title: name, description }
+  }
+
+  async #fetchResource(url) {
+    const text = await this.#fetch(url);
+    const contents = [{ uri: url, text }];
+    return { contents };
+  }
+
+  async #fetchPrompt(url) {
+    const text = await this.#fetch(url);
+    const content = { type: 'text', text };
+    const messages = [{ role: 'user', content }];
+    return { messages };
+  }
+
+  async #fetch(uri) {
+    const response = await fetch(uri);
+    return await response.text();
   }
 
   async start() {

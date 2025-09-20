@@ -33,16 +33,16 @@ describe('Server', () => {
       eq(resources.length, 1);
       eq(resources[0].name, 'code-standards');
       eq(resources[0].title, 'code-standards');
-      eq(resources[0].uri, 'https://raw.githubusercontent.com/cressie176/prompts/refs/heads/main/resources/code-standards.md');
+      eq(resources[0].uri, 'https://raw.githubusercontent.com/cressie176/mcp-server/refs/heads/main/resources/code-standards.md');
     });
 
     it('resources/read coding-standards', async () => {
       const { result: { contents } } = await send({
         method: 'resources/read',
-        params: { uri: 'https://raw.githubusercontent.com/cressie176/prompts/refs/heads/main/resources/code-standards.md' }
+        params: { uri: 'https://raw.githubusercontent.com/cressie176/mcp-server/refs/heads/main/resources/code-standards.md' }
       });
       eq(contents.length, 1);
-      eq(contents[0].uri, 'https://raw.githubusercontent.com/cressie176/prompts/refs/heads/main/resources/code-standards.md');
+      eq(contents[0].uri, 'https://raw.githubusercontent.com/cressie176/mcp-server/refs/heads/main/resources/code-standards.md');
       match(contents[0].text, /# Code Standards/);
     });
 
@@ -70,9 +70,12 @@ describe('Server', () => {
 
   async function send(params) {
     const response = stdout.waitForResponse()
-    const id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1;
-    const json = JSON.stringify({ jsonrpc: '2.0', id, ...params });
+    const json = JSON.stringify({ jsonrpc: '2.0', id: generateId(), ...params });
     stdin.send(json);
     return response;
+  }
+
+  function generateId() {
+    return Math.floor(Math.random() * Number.MAX_SAFE_INTEGER) + 1
   }
 });
