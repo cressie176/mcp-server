@@ -7,7 +7,6 @@ import GitHub from './GitHub.js';
 const github = new GitHub({ user: 'cressie176', repository: 'mcp-server' });
 const RESOURCES = [{ name: 'code-standards', description: 'The latest ACME coding standards' }];
 const PROMPTS = [{ name: 'code-review', description: 'Requests a code review' }];
-const debug = Debug('mcp-server');
 
 class Server {
   #stdin;
@@ -90,7 +89,6 @@ class Server {
   }
 
   async #fetch(url) {
-    debug(`Fetching ${url}`);
     const response = await fetch(url);
     return response.text();
   }
