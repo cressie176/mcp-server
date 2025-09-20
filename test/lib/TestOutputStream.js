@@ -1,5 +1,4 @@
 import { Writable } from 'node:stream';
-import { EOL } from 'node:os';
 import Debug from 'debug';
 
 const debug = Debug('mcp:server');
@@ -8,7 +7,7 @@ class TestOutputStream extends Writable {
   #queue = [];
 
   waitForReply() {
-    return new Promise((resolve, reject ) => this.#queue.push({ resolve, reject }));
+    return new Promise((resolve, reject) => this.#queue.push({ resolve, reject }));
   }
 
   _write(chunk, encoding, cb) {
@@ -27,7 +26,7 @@ class TestOutputStream extends Writable {
   }
 
   #reply(waiter, line) {
-    if (!waiter) return debug(`Unexpected reply from server`)
+    if (!waiter) return debug(`Unexpected reply from server`);
     try {
       waiter.resolve(JSON.parse(line));
     } catch (err) {

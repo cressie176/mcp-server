@@ -1,17 +1,12 @@
 import { stdin, stdout } from 'node:process';
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
 const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/cressie176/mcp-server/refs/heads/main';
-const RESOURCES = [
-  { name: 'code-standards', description: 'The latest ACME coding standards' },
-]
-const PROMPTS = [
-  { name: 'code-review', description: 'Requests a code review' }
-]
+const RESOURCES = [{ name: 'code-standards', description: 'The latest ACME coding standards' }];
+const PROMPTS = [{ name: 'code-review', description: 'Requests a code review' }];
 
 class Server {
-
   #stdin;
   #stdout;
   #server;
@@ -29,23 +24,21 @@ class Server {
   }
 
   #registerCodeStandards() {
-    RESOURCES.forEach(
-      ({ name, description }) => this.#server.registerResource(
+    RESOURCES.forEach(({ name, description }) =>
+      this.#server.registerResource(
         name,
         this.#getResourceUrl(name),
         this.#getResourceMetaData(name, description),
-        (uri) => this.#fetchResource(uri.href)
-      )
+        (uri) => this.#fetchResource(uri.href),
+      ),
     );
   }
 
   #registerCodeReview() {
-    PROMPTS.forEach(
-      ({ name, description }) => this.#server.registerPrompt(
-        name,
-        this.#getPromptMetaData(name, description),
-        () => this.#fetchPrompt(this.#getPromptUrl(name))
-      )
+    PROMPTS.forEach(({ name, description }) =>
+      this.#server.registerPrompt(name, this.#getPromptMetaData(name, description), () =>
+        this.#fetchPrompt(this.#getPromptUrl(name)),
+      ),
     );
   }
 
@@ -55,14 +48,14 @@ class Server {
 
   #getPromptUrl(name) {
     return `${GITHUB_BASE_URL}/prompts/${name}.md`;
-  };
+  }
 
   #getResourceMetaData(name, description) {
     return { title: name, description, mimeType: 'text/markdown' };
   }
 
   #getPromptMetaData(name, description) {
-    return { title: name, description }
+    return { title: name, description };
   }
 
   async #fetchResource(url) {
@@ -94,3 +87,5 @@ class Server {
 }
 
 export default Server;
+
+export { GITHUB_BASE_URL };

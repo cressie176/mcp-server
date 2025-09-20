@@ -18,11 +18,17 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "test:only": "node --test --test-only",
+    "lint": "biome check",
+    "format": "biome format --write"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.18.1",
     "debug": "^4.4.3",
     "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.4"
   }
 }
