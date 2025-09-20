@@ -51,7 +51,7 @@ class Server {
 
   #registerCodeReview() {
     this.#server.registerPrompt('code-review', {
-      title: 'Code Review',
+      title: 'CodeReview',
       description: 'Requests a code review',
     },
     () => {
