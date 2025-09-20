@@ -20,13 +20,13 @@ const eta = new Eta();
 class Server {
   #stdin;
   #stdout;
-  #github;
+  #store;
   #server;
 
   constructor(options = { stdin, stdout }) {
     this.#stdin = options.stdin;
     this.#stdout = options.stdout;
-    this.#github = options.github;
+    this.#store = options.store;
     this.#server = new McpServer({ name: 'ACME', version: '1.0.0' });
     this.#init();
   }
@@ -46,28 +46,20 @@ class Server {
   }
 
   #registerResources() {
-    RESOURCES.forEach((resource) => this.#registerResource(resource));
-  }
-
-  #registerResource(resource) {
-    this.#server.registerResource(
+    RESOURCES.forEach((resource) => this.#server.registerResource(
       resource.name,
-      this.#github.buildResourceUrl(resource.name),
+      this.#store.buildResourceUrl(resource.name),
       this.#getResourceMetaData(resource),
       (uri) => this.#fetchResource(uri.href),
-    );
+    ));
   }
 
   #registerPrompts() {
-    PROMPTS.forEach((prompt) => this.#registerPrompt(prompt));
-  }
-
-  #registerPrompt(prompt) {
-    this.#server.registerPrompt(
+    PROMPTS.forEach((prompt) => this.#server.registerPrompt(
       prompt.name,
       this.#getPromptMetaData(prompt),
-      (args) => this.#fetchPrompt(this.#github.buildPromptUrl(prompt.name), args),
-    );
+      (args) => this.#fetchPrompt(this.#store.buildPromptUrl(prompt.name), args),
+    ));
   }
 
   #getResourceMetaData({ name, description }) {
@@ -90,8 +82,8 @@ class Server {
 
   async #fetchPrompt(url, args) {
     const template = await this.#fetch(url);
-    const text = eta.renderString(template, args)
-    return this.#createPrompt(text);
+    // const text = eta.renderString(template, args)
+    return this.#createPrompt(template);
   }
 
   #createPrompt(text) {

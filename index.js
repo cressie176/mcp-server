@@ -5,8 +5,8 @@ import Server from './src/Server.js';
 import GitHub from './src/GitHub.js';
 
 const [,, user, repository] = process.argv;
-const github = new GitHub({ user, repository });
-const server = new Server({ github });
+const store = new GitHub({ user, repository });
+const server = new Server({ store });
 
 process.on('SIGINT', interrupt);
 process.on('SIGTERM', interrupt);

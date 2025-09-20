@@ -10,8 +10,8 @@ const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/cressie176/mcp-server
 describe('Server', () => {
   const stdin = new TestInputStream();
   const stdout = new TestOutputStream();
-  const github = new GitHub({ user: 'cressie176', repository: 'mcp-server' })
-  const server = new Server({ stdin, stdout, github });
+  const store = new GitHub({ user: 'cressie176', repository: 'mcp-server' })
+  const server = new Server({ stdin, stdout, store });
 
   before(async () => {
     await server.start();
