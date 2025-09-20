@@ -6,8 +6,9 @@ Follow them as instructions, not suggestions.
 ---
 
 ## 1. Naming
-- Always use descriptive names for variables, functions, classes, and files.
-- Never use abbreviations or short codes unless they are industry standard or extremely common (e.g. tx for transaction, cb for callback)
+- Use descriptive names for variables, functions, classes, and files.
+- Avoid abbreviations or short codes unless they are industry standard or extremely common
+  - Allowed abbreviations are: id, tx, cb, err
 - The name must reveal the intent of the code.
 - When parameters clearly indicate the data type or purpose, prefer concise function names over verbose alternatives.
 ---

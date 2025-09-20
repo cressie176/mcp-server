@@ -20,7 +20,7 @@ describe('Server', () => {
 
   describe('ping', () => {
     it('responds', async () => {
-      const { jsonrpc, id } = await send({ id: 999, method: 'ping' });
+      const { jsonrpc, id } = await request({ id: 999, method: 'ping' });
       eq(jsonrpc, '2.0');
       eq(id, 999);
     });
@@ -29,7 +29,7 @@ describe('Server', () => {
   describe('resources', () => {
 
     it('resources/list', async () => {
-      const { result: { resources } } = await send({ method: 'resources/list' });
+      const { result: { resources } } = await request({ method: 'resources/list' });
       eq(resources.length, 1);
       eq(resources[0].name, 'code-standards');
       eq(resources[0].title, 'code-standards');
@@ -37,7 +37,7 @@ describe('Server', () => {
     });
 
     it('resources/read coding-standards', async () => {
-      const { result: { contents } } = await send({
+      const { result: { contents } } = await request({
         method: 'resources/read',
         params: { uri: 'https://raw.githubusercontent.com/cressie176/mcp-server/refs/heads/main/resources/code-standards.md' }
       });
@@ -51,7 +51,7 @@ describe('Server', () => {
   describe('prompts', () => {
 
     it('prompts/list', async () => {
-      const { result: { prompts } } = await send({ method: 'prompts/list' });
+      const { result: { prompts } } = await request({ method: 'prompts/list' });
       eq(prompts.length, 1);
       eq(prompts[0].name, 'code-review');
       eq(prompts[0].title, 'code-review');
@@ -59,7 +59,7 @@ describe('Server', () => {
     });
 
     it('prompts/get code-review', async () => {
-      const { result: { messages } } = await send({ method: 'prompts/get', params: { name: 'code-review' } });
+      const { result: { messages } } = await request({ method: 'prompts/get', params: { name: 'code-review' } });
       eq(messages.length, 1);
       eq(messages[0].role, 'user');
       eq(messages[0].content.type, 'text');
@@ -68,11 +68,11 @@ describe('Server', () => {
 
   });
 
-  async function send(params) {
-    const response = stdout.waitForResponse()
-    const json = JSON.stringify({ jsonrpc: '2.0', id: generateId(), ...params });
-    stdin.send(json);
-    return response;
+  async function request(operation) {
+    const reply = stdout.waitForReply();
+    const json = JSON.stringify({ jsonrpc: '2.0', id: generateId(), ...operation });
+    stdin.request(json);
+    return reply;
   }
 
   function generateId() {

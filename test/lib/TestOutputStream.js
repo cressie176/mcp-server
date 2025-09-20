@@ -9,35 +9,32 @@ class TestOutputStream extends Writable {
   #buffer = '';
   #queue = [];
 
-  waitForResponse() {
+  waitForReply() {
     return new Promise((resolve, reject ) => this.#queue.push({ resolve, reject }));
   }
 
   _write(chunk, encoding, cb) {
-    this.#buffer += chunk.toString();
-
-    for (;;) {
-      const nl = this.#buffer.indexOf(EOL);
-      if (nl === -1) break;
-
-      const line = this.#buffer.slice(0, nl);
-      this.#buffer = this.#buffer.slice(nl + 1);
-
-      const waiter = this.#queue.shift();
-      if (waiter) {
-        const { resolve, reject } = waiter;
-        try {
-          debug(line);
-          resolve(JSON.parse(line));
-        } catch (err) {
-          reject(err);
-        }
-      } else {
-        console.log('RECEIVED (no waiter)', line);
-      }
-    }
-
+    this.#reply(this.#getWaiter(), this.#getLine(chunk));
     cb();
+  }
+
+  #getLine(chunk) {
+    const line = chunk.toString();
+    debug(line);
+    return line;
+  }
+
+  #getWaiter() {
+    return this.#queue.shift();
+  }
+
+  #reply(waiter, line) {
+    if (!waiter) return debug(`Unexpected reply from server`)
+    try {
+      waiter.resolve(JSON.parse(line));
+    } catch (err) {
+      waiter.reject(err);
+    }
   }
 }
 

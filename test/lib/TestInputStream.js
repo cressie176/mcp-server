@@ -10,7 +10,7 @@ class TestInputStream extends Readable {
     // Empty implementation prevents test blocking - Readable stream contract requires this method
   }
 
-  send(json) {
+  request(json) {
     debug(json);
     this.push(json + `\n`);
   }
