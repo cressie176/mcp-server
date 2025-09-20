@@ -63,7 +63,7 @@ describe('Server', () => {
       eq(messages.length, 1);
       eq(messages[0].role, 'user');
       eq(messages[0].content.type, 'text');
-      match(messages[0].content.text, /# Code Review/);
+      match(messages[0].content.text, /Perform a code review using the following process/);
     });
 
   });

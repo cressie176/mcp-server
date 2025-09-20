@@ -1,6 +1,5 @@
-# Code Review
+Perform a code review using the following process:
 
-## Review Process
 1. Fetch the latest @code-standards
 2. Review the specified code against these standards
   - Exclude code in node_modules or generated folders like 'dist'
