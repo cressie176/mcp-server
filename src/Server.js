@@ -18,6 +18,15 @@ class Server {
     this.#init();
   }
 
+  async start() {
+    const transport = new StdioServerTransport(this.#stdin, this.#stdout);
+    await this.#server.connect(transport);
+  }
+
+  async stop() {
+    await this.#server.close();
+  }
+
   #init() {
     this.#registerCodeStandards();
     this.#registerCodeReview();
@@ -60,12 +69,20 @@ class Server {
 
   async #fetchResource(url) {
     const text = await this.#fetch(url);
-    const contents = [{ uri: url, text }];
+    return this.#createResource(url, text);
+  }
+
+  #createResource(uri, text) {
+    const contents = [{ uri, text }];
     return { contents };
   }
 
   async #fetchPrompt(url) {
     const text = await this.#fetch(url);
+    return this.#createPrompt(text);
+  }
+
+  #createPrompt(text) {
     const content = { type: 'text', text };
     const messages = [{ role: 'user', content }];
     return { messages };
@@ -74,15 +91,6 @@ class Server {
   async #fetch(uri) {
     const response = await fetch(uri);
     return response.text();
-  }
-
-  async start() {
-    const transport = new StdioServerTransport(this.#stdin, this.#stdout);
-    await this.#server.connect(transport);
-  }
-
-  async stop() {
-    await this.#server.close();
   }
 }
 

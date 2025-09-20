@@ -2,8 +2,6 @@
 
 These rules exist to make code clear, consistent, and maintainable.
 Follow them as instructions, not suggestions.
-Never volunteer feedback unless it relates to the code standards contained herein
-Never concern yourself with linting. There are more appropriate tools for that.
 
 ---
 
@@ -16,8 +14,9 @@ Never concern yourself with linting. There are more appropriate tools for that.
 
 ## 2. Functions
 - Keep functions small and focused on one task only.
-- Functions must contain no more than **6 significant executable statements** (as opposed to lines).
-  - Do not count statements that are inlined into function calls or map values
+- Functions must contain no more than **6 significant executable statements**.
+  - Statements that are inlined into function calls NOT significant
+  - Statements that are inlined into map values are NOT significant
 - Function names must use verbs to describe the action.
 - Do not use more than two parameters.
 - Functions must not cause hidden side effects.
