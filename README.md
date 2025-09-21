@@ -53,7 +53,7 @@ Add this to your Claude configuration:
 }
 ```
 
-Restart Claude and your resources and prompts will be available!
+Restart Claude and your resources and prompts will be available. You can confirm using the `/mcp` command.
 
 ## Example Prompts and Resources
 See my [prompts](https://github.com/cressie176/prompts) repository
