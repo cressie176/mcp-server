@@ -34,8 +34,8 @@ export function createWriter(level, logFile = 'debug.log') {
 }
 
 function writeRecord(record, threshold, logFile) {
+  if (LOG_LEVELS[record.level] < threshold) return;
   const { level, message, context, timestamp = new Date().toISOString() } = record;
-  if (LOG_LEVELS[level] < threshold) return;
   const output = formatOutput(timestamp, level, message, context);
   writeToFile(output, logFile);
 }
