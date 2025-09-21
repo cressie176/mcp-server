@@ -1,5 +1,5 @@
 import { strictEqual as eq } from 'node:assert';
-import { afterEach, beforeEach, describe, it } from 'node:test';
+import { afterEach, before, beforeEach, describe, it } from 'node:test';
 import Server from '../src/Server.js';
 import TestClient from './lib/TestClient.js';
 import TestInputStream from './lib/TestInputStream.js';
@@ -10,6 +10,11 @@ describe('Server', () => {
   let repository;
   let client;
   let server;
+
+  before(() => {
+    // Keep this, and uncomment it to debug tests
+    // process.on('LOG', console.log);
+  });
 
   beforeEach(() => {
     const stdin = new TestInputStream();
@@ -24,7 +29,7 @@ describe('Server', () => {
   });
 
   describe('ping', () => {
-    it('responds', async () => {
+    it('responds', { only: true }, async () => {
       await server.start();
       const { jsonrpc } = await client.ping();
       eq(jsonrpc, '2.0');

@@ -1,5 +1,4 @@
 import { Writable } from 'node:stream';
-import Logger from '../../src/Logger.js';
 
 class TestOutputStream extends Writable {
   #queue = [];
@@ -9,14 +8,8 @@ class TestOutputStream extends Writable {
   }
 
   _write(chunk, encoding, cb) {
-    this.#reply(this.#getWaiter(), this.#getLine(chunk));
+    this.#reply(this.#getWaiter(), chunk.toString());
     cb();
-  }
-
-  #getLine(chunk) {
-    const line = chunk.toString();
-    Logger.debug(`TestOutputStream: ${line}`);
-    return line;
   }
 
   #getWaiter() {

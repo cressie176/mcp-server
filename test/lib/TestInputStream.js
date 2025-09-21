@@ -1,5 +1,4 @@
 import { Readable } from 'node:stream';
-import Logger from '../../src/Logger.js';
 
 class TestInputStream extends Readable {
   _read() {
@@ -8,7 +7,6 @@ class TestInputStream extends Readable {
   }
 
   request(json) {
-    Logger.debug(`TestInputStream: ${json}`);
     this.push(`${json}\n`);
   }
 

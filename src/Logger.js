@@ -30,7 +30,7 @@ class Logger {
   }
 
   static createWriter(level, logFile = 'debug.log') {
-    const threshold = LOG_LEVELS[level?.toUpperCase()] ?? LOG_LEVELS.OFF;
+    const threshold = LOG_LEVELS[level?.toUpperCase()] ?? LOG_LEVELS.DEBUG;
     return (record) => Logger.#writeRecord(record, threshold, logFile);
   }
 

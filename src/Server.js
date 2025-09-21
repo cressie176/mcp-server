@@ -2,6 +2,9 @@ import { stdin, stdout } from 'node:process';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import Logger from './Logger.js';
+import LoggingTee from './LoggingTee.js';
+
+const defaults = { stdin, stdout };
 
 class Server {
   #stdin;
@@ -10,14 +13,19 @@ class Server {
   #server;
 
   constructor(options) {
-    this.#stdin = options.stdin || stdin;
-    this.#stdout = options.stdout || stdout;
-    this.#repository = options.repository;
+    const { stdin, stdout, repository } = { ...defaults, ...options };
+    const tee = new LoggingTee('STDOUT');
+    tee.pipe(stdout);
+
+    this.#stdin = stdin;
+    this.#stdout = tee;
+    this.#repository = repository;
     this.#server = new McpServer({ name: 'ACME', version: '1.0.0' });
   }
 
   async start() {
     try {
+      Logger.debug('Starting server');
       await this.#repository.init();
       this.#registerResources();
       this.#registerPrompts();
@@ -30,6 +38,7 @@ class Server {
   }
 
   async stop() {
+    Logger.debug('Stopping server');
     await this.#server.close();
     Logger.debug('Server stopped');
   }
@@ -91,6 +100,11 @@ class Server {
     const content = { type: 'text', text };
     const messages = [{ role: 'user', content }];
     return { messages };
+  }
+
+  #createDebugStream(originalStream, name) {
+    const debugTransform = new DebugTransform(name);
+    return originalStream.pipe(debugTransform);
   }
 }
 
