@@ -2,7 +2,7 @@
 
 import process from 'node:process';
 import Arguments from './src/Arguments.js';
-import GitHub from './src/GitHub.js';
+import GitHub from './src/repositories/GitHub.js';
 import Server from './src/Server.js';
 
 const args = new Arguments(process.argv.slice(2));

@@ -1,0 +1,14 @@
+{
+  "resources": [
+    {
+      "name": "code-standards",
+      "description": "Code Standards"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "code-review",
+      "description": "Code Review"
+    }
+  ]
+}
