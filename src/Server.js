@@ -1,11 +1,6 @@
 import { stdin, stdout } from 'node:process';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { convertJsonSchemaToZod } from 'zod-from-json-schema';
-import z from "zod";
-import { Eta } from 'eta';
-
-const eta = new Eta();
 
 class Server {
   #stdin;
@@ -29,13 +24,11 @@ class Server {
   }
 
   async stop() {
-    await this.#repository.reset();
     await this.#server.close();
   }
 
   #registerResources() {
     this.#repository.resources((resource) => {
-      console.log('DEBUG:', 'Registering Resource', { resource });
       this.#server.registerResource(
         resource.name,
         this.#repository.buildResourceUrl(resource.name),
@@ -46,33 +39,26 @@ class Server {
   }
 
   #registerPrompts() {
-    this.#repository.prompts((prompt) => this.#server.registerPrompt(
-      prompt.name,
-      this.#getPromptMetaData(prompt),
-      (args) => this.#fetchPrompt(this.#repository.buildPromptUrl(prompt.name), args),
-    ));
+    this.#repository.prompts((prompt) => {
+      this.#server.registerPrompt(
+        prompt.name,
+        this.#getPromptMetaData(prompt),
+        () => this.#fetchPrompt(this.#repository.buildPromptUrl(prompt.name)),
+      )
+    });
   }
 
   #getResourceMetaData({ name, description }) {
     return { title: name, description, mimeType: 'text/markdown' };
   }
 
-  #getPromptMetaData({ name, description, args = {} }) {
-    return { title: name, description, argsSchema: this.#getArgsSchema(args) };
-  }
-
-  #getArgsSchema(args) {
-    Object.keys(args).reduce((result, name) => {
-      return {
-        ...result,
-        [name]: convertJsonSchemaToZod(args[name].schema),
-      }
-    }, {})
+  #getPromptMetaData({ name, description }) {
+    return { title: name, description };
   }
 
   async #fetchResource(uri) {
-    const text = await this.#repository.fetch(uri);
-    return this.#createResource(uri, text);
+    const text = await this.#repository.fetch(uri.href);
+    return this.#createResource(uri.href, text);
   }
 
   #createResource(uri, text) {
@@ -80,9 +66,8 @@ class Server {
     return { contents };
   }
 
-  async #fetchPrompt(url, args) {
-    const template = await this.#repository.fetch(url);
-    const text = eta.renderString(template, args);
+  async #fetchPrompt(url) {
+    const text = await this.#repository.fetch(url);
     return this.#createPrompt(text);
   }
 

@@ -26,8 +26,7 @@ class TestOutputStream extends Writable {
   }
 
   #reply(waiter, line) {
-    if (line.startsWith('DEBUG:')) return debug(line);
-    if (!waiter) return debug(`Unexpected reply from server`);
+    if (!waiter) return;
     try {
       waiter.resolve(JSON.parse(line));
     } catch (err) {

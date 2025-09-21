@@ -1,5 +1,5 @@
-import { strictEqual as eq, match } from 'node:assert';
-import { after, before, describe, it } from 'node:test';
+import { strictEqual as eq } from 'node:assert';
+import { beforeEach, afterEach, describe, it } from 'node:test';
 import Server from '../src/Server.js';
 import TestInputStream from './lib/TestInputStream.js';
 import TestOutputStream from './lib/TestOutputStream.js';
@@ -7,40 +7,48 @@ import TestClient from './lib/TestClient.js';
 import TestRepository from './lib/TestRepository.js';
 
 describe('Server', () => {
-  const stdin = new TestInputStream();
-  const stdout = new TestOutputStream();
-  const repository = new TestRepository()
-  const server = new Server({ stdin, stdout, repository });
-  const client = new TestClient({ stdin, stdout });
+  let repository;
+  let client;
+  let server;
 
-  before(async () => {
-    await server.start();
-  });
+  beforeEach(() => {
+    const stdin = new TestInputStream();
+    const stdout = new TestOutputStream();
+    client = new TestClient({ stdin, stdout });
+    repository = new TestRepository();
+    server = new Server({ stdin, stdout, repository })
+  })
 
-  after(async () => {
+  afterEach(async () => {
     await server.stop();
   });
 
   describe('ping', () => {
     it('responds', async () => {
+      await server.start();
       const { jsonrpc } = await client.ping();
       eq(jsonrpc, '2.0');
     });
   });
 
   describe('resources', () => {
-    it('resources/list', { only: true }, async () => {
-      const uri = repository.putResource('code-standards', 'Code Standards Yay!');
+    it('resources/list', async () => {
+      const uri = repository.putResource({ name: 'code-standards', description: 'Code Standards', content: 'Code Standards Yay!' });
+      await server.start();
+
       const resources = await client.listResources();
 
       eq(resources.length, 1);
       eq(resources[0].name, 'code-standards');
       eq(resources[0].title, 'code-standards');
+      eq(resources[0].description, 'Code Standards');
+      eq(resources[0].mimeType, 'text/markdown');
       eq(resources[0].uri, uri);
     });
 
     it('resources/read', async () => {
-      const uri = repository.putResource('code-standards', 'Code Standards Yay!');
+      const uri = repository.putResource({ name: 'code-standards', description: 'Code Standards', content: 'Code Standards Yay!' });
+      await server.start();
       const contents = await client.readResource(uri);
 
       eq(contents.length, 1);
@@ -51,43 +59,27 @@ describe('Server', () => {
 
   describe('prompts', () => {
     it('prompts/list', async () => {
-      repository.putPrompt('code-review', 'Code Review Yay!');
+      repository.putPrompt({ name: 'code-review', description: 'Code Review', content: 'Code Review Yay!' });
+      await server.start();
+
       const prompts = await client.listPrompts();
 
       eq(prompts.length, 1);
       eq(prompts[0].name, 'code-review');
       eq(prompts[0].title, 'code-review');
-      eq(prompts[0].description, 'Requests a code review');
+      eq(prompts[0].description, 'Code Review');
     });
 
     it('prompts/get', async () => {
-      repository.putPrompt('code-review', 'Code Review Yay!');
+      repository.putPrompt({ name: 'code-review', description: 'Code Review', content: 'Code Review Yay!' });
+      await server.start();
+
       const messages = await client.getPrompt('code-review', { scope: 'unstaged' });
 
       eq(messages.length, 1);
       eq(messages[0].role, 'user');
       eq(messages[0].content.type, 'text');
       eq(messages[0].content.text, 'Code Review Yay!');
-    });
-
-    it('prompts/get template with defaults', async () => {
-      repository.putPrompt('code-review', 'Code Review (<%= it.scope %>)');
-      const messages = await client.getPrompt('code-review');
-
-      eq(messages.length, 1);
-      eq(messages[0].role, 'user');
-      eq(messages[0].content.type, 'text');
-      eq(messages[0].content.text, 'Code Review (all)');
-    });
-
-    it('prompts/get template with arguments', async () => {
-      repository.putPrompt('code-review', 'Code Review (<%= it.scope %>)');
-      const messages = await client.getPrompt('code-review', { scope: 'unstaged' });
-
-      eq(messages.length, 1);
-      eq(messages[0].role, 'user');
-      eq(messages[0].content.type, 'text');
-      eq(messages[0].content.text, 'Code Review (unstaged)');
     });
   });
 });

@@ -13,10 +13,6 @@ class GitHub {
     this.#index = JSON.parse(text);
   }
 
-  async reset() {
-    this.#index = {};
-  }
-
   resources(cb) {
     this.#index.resources?.forEach(cb);
   }
