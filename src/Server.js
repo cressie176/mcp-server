@@ -101,11 +101,6 @@ class Server {
     const messages = [{ role: 'user', content }];
     return { messages };
   }
-
-  #createDebugStream(originalStream, name) {
-    const debugTransform = new DebugTransform(name);
-    return originalStream.pipe(debugTransform);
-  }
 }
 
 export default Server;
