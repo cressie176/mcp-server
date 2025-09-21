@@ -14,7 +14,6 @@ class Server {
 
   constructor(options) {
     const { stdin, stdout, repository } = { ...defaults, ...options };
-
     this.#stdout = new LoggingTee('STDOUT').pipeTo(stdout);
     this.#stdin = new LoggingTee('STDIN').pipeFrom(stdin);
     this.#repository = repository;
@@ -23,24 +22,28 @@ class Server {
 
   async start() {
     try {
-      Logger.debug('Starting server');
+      Logger.info('Starting server');
       await this.#repository.init();
       this.#registerResources();
       this.#registerPrompts();
-      const transport = new StdioServerTransport(this.#stdin, this.#stdout);
-      await this.#server.connect(transport);
-      Logger.debug('Server started');
+      await this.#connect();
+      Logger.info('Server started');
     } catch (err) {
       Logger.error('Error starting server', err);
     }
   }
 
+  #connect() {
+    const transport = new StdioServerTransport(this.#stdin, this.#stdout);
+    return this.#server.connect(transport);
+  }
+
   async stop() {
-    Logger.debug('Stopping server');
+    Logger.info('Stopping server');
     this.#stdin.unpipe?.();
     this.#stdout.unpipe?.();
     await this.#server.close();
-    Logger.debug('Server stopped');
+    Logger.info('Server stopped');
   }
 
   #registerResources() {
@@ -55,9 +58,9 @@ class Server {
   }
 
   #registerResource(resource, url) {
-    Logger.debug(`Registering resource ${resource.name} with ${url}`);
+    Logger.info(`Registering resource ${resource.name} with ${url}`);
     this.#server.registerResource(resource.name, url, this.#getResourceMetaData(resource), async (uri) => {
-      Logger.debug(`Fetching resource ${uri.href}`);
+      Logger.info(`Fetching resource ${resource.name} from ${uri.href}`);
       return this.#fetchResource(uri.href);
     });
   }
@@ -73,10 +76,10 @@ class Server {
   }
 
   #registerPrompt(prompt) {
-    Logger.debug(`Registering prompt ${prompt.name}`);
+    Logger.info(`Registering prompt ${prompt.name}`);
     this.#server.registerPrompt(prompt.name, this.#getPromptMetaData(prompt), async () => {
       const uri = this.#repository.buildPromptUrl(prompt.name);
-      Logger.debug(`Fetching prompt ${prompt.name} from ${uri}`);
+      Logger.info(`Fetching prompt ${prompt.name} from ${uri}`);
       return this.#fetchPrompt(uri);
     });
   }

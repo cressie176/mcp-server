@@ -8,7 +8,7 @@ class RepositoryFactory {
   ]);
 
   static create(args) {
-    const repositoryType = args.get('repository-type');
+    const repositoryType = args.get('repositoryType');
     const factory = RepositoryFactory.#getFactory(repositoryType);
     return factory(args);
   }

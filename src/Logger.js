@@ -29,7 +29,7 @@ export function log(message, context) {
 }
 
 export function createWriter(level, logFile = 'debug.log') {
-  const threshold = LOG_LEVELS[level?.toUpperCase()] ?? LOG_LEVELS.DEBUG;
+  const threshold = LOG_LEVELS[level?.toUpperCase()] ?? LOG_LEVELS.ERROR;
   return (record) => writeRecord(record, threshold, logFile);
 }
 

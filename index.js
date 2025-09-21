@@ -6,13 +6,17 @@ import * as Logger from './src/Logger.js';
 import RepositoryFactory from './src/RepositoryFactory.js';
 import Server from './src/Server.js';
 
-const args = new Arguments(process.argv.slice(2));
-
+const args = new Arguments(process.argv.slice(2), {
+  alias: {
+    repositoryType: 'repository-type',
+    logLevel: 'log-level',
+    logFile: 'log-file',
+  },
+});
 const repository = RepositoryFactory.create(args);
 const server = new Server({ repository });
 
-const logLevel = args.get('log-level');
-const logFile = args.get('log-file');
+const { logFile, logLevel } = args.filter(['logLevel', 'logFile']);
 const writeLog = Logger.createWriter(logLevel, logFile);
 
 process.on('SIGINT', interrupt);
