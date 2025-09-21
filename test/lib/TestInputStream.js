@@ -5,7 +5,8 @@ const debug = Debug('mcp:client');
 
 class TestInputStream extends Readable {
   _read() {
-    // Empty implementation prevents test blocking - Readable stream contract requires this method
+    // We include an empty _read implementation because it is required by the Readable contract
+    // Without it the tests will block
   }
 
   request(json) {

@@ -19,4 +19,3 @@ class Arguments {
 }
 
 export default Arguments;
-// test change

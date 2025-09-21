@@ -13,7 +13,7 @@ class RepositoryFactory {
         return new GitHub(args.filter(['user', 'organisation', 'repository', 'ref', 'path']));
       }
       default:
-        throw new Error(`Unknown repository type: ${repositoryType}`);
+        throw new Error(`Unknown repository type: ${repositoryType}. Valid types are: filesystem, github`);
     }
   }
 }
