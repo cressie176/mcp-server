@@ -23,6 +23,9 @@
       "suspicious": {
         "useIterableCallbackReturn": "off"
       },
+      "complexity": {
+        "noStaticOnlyClass": "off"
+      },
       "performance": {
         "noAccumulatingSpread": "off"
       }

@@ -2,11 +2,11 @@
 
 import process from 'node:process';
 import Arguments from './src/Arguments.js';
-import GitHub from './src/repositories/GitHub.js';
+import RepositoryFactory from './src/RepositoryFactory.js';
 import Server from './src/Server.js';
 
 const args = new Arguments(process.argv.slice(2));
-const repository = new GitHub(args.filter(['user', 'organisation', 'repository', 'ref', 'path']));
+const repository = RepositoryFactory.create(args);
 const server = new Server({ repository });
 
 process.on('SIGINT', interrupt);
