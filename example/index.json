@@ -1,0 +1,23 @@
+{
+  "resources": [
+    { "name": "code-standards", "description": "The latest ACME coding standards" }
+  ],
+  "prompts": [
+    {
+      "name": "code-review",
+      "description": "Requests a code review",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "string",
+            "enum": ["all", "unstaged", "staged"],
+            "default": "all",
+            "description": "One of 'all', 'unstaged' or 'staged'"
+          }
+        }
+      }
+    }
+  ]
+}

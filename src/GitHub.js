@@ -1,9 +1,28 @@
 class GitHub {
 
   #baseUrl;
+  #index = {};
 
-  constructor({ user, organisation, repository }) {
-    this.#baseUrl = `https://raw.githubusercontent.com/${user || organisation}/${repository}/refs/heads/main`
+  constructor({ user, organisation, repository, ref = 'heads/main', path }) {
+    this.#baseUrl = ['https://raw.githubusercontent.com', user || organisation, repository, 'refs', ref, path].join('/');
+  }
+
+  async init() {
+    const url = this.#buildUrl('index.json');
+    const text = await this.fetch(url);
+    this.#index = JSON.parse(text);
+  }
+
+  async reset() {
+    this.#index = {};
+  }
+
+  resources(cb) {
+    this.#index.resources?.forEach(cb);
+  }
+
+  prompts() {
+    this.#index.prompts?.forEach(cb);
   }
 
   async fetch(url) {
@@ -12,15 +31,15 @@ class GitHub {
   }
 
   buildResourceUrl(name) {
-    return this.#buildUrl('resources', name);
+    return this.#buildUrl(`resources/${name}.md`);
   }
 
   buildPromptUrl(name) {
-    return this.#buildUrl('prompts', name);
+    return this.#buildUrl(`prompts/${name}.md`);
   }
 
-  #buildUrl(type, name) {
-    return `${this.#baseUrl}/${type}/${name}.md`;
+  #buildUrl(path) {
+    `${this.#baseUrl}/${path}`;
   }
 }
 

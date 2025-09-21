@@ -1,20 +1,9 @@
 import { stdin, stdout } from 'node:process';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import z from 'zod';
+import { convertJsonSchemaToZod } from 'zod-from-json-schema';
 import { Eta } from 'eta';
 
-const RESOURCES = [{ name: 'code-standards', description: 'The latest ACME coding standards' }];
-const CODE_REVIEW_SCOPES = ['all', 'unstaged', 'staged'];
-const PROMPTS = [
-  {
-    name: 'code-review',
-    description: 'Requests a code review',
-    argsSchema: {
-      scope: z.enum(CODE_REVIEW_SCOPES).default('all').describe('One of "all", "unstaged" or "staged"')
-    }
-  },
-];
 const eta = new Eta();
 
 class Server {
@@ -28,25 +17,23 @@ class Server {
     this.#stdout = options.stdout;
     this.#store = options.store;
     this.#server = new McpServer({ name: 'ACME', version: '1.0.0' });
-    this.#init();
   }
 
   async start() {
+    await this.#store.init();
+    this.#registerResources();
+    this.#registerPrompts();
     const transport = new StdioServerTransport(this.#stdin, this.#stdout);
     await this.#server.connect(transport);
   }
 
   async stop() {
+    await this.#store.reset();
     await this.#server.close();
   }
 
-  #init() {
-    this.#registerResources();
-    this.#registerPrompts();
-  }
-
   #registerResources() {
-    RESOURCES.forEach((resource) => this.#server.registerResource(
+    this.#store.resources((resource) => this.#server.registerResource(
       resource.name,
       this.#store.buildResourceUrl(resource.name),
       this.#getResourceMetaData(resource),
@@ -55,7 +42,7 @@ class Server {
   }
 
   #registerPrompts() {
-    PROMPTS.forEach((prompt) => this.#server.registerPrompt(
+    this.#store.prompts((prompt) => this.#server.registerPrompt(
       prompt.name,
       this.#getPromptMetaData(prompt),
       (args) => this.#fetchPrompt(this.#store.buildPromptUrl(prompt.name), args),
@@ -66,8 +53,8 @@ class Server {
     return { title: name, description, mimeType: 'text/markdown' };
   }
 
-  #getPromptMetaData({ name, description, argsSchema }) {
-    return { title: name, description, argsSchema };
+  #getPromptMetaData({ name, description, schema = {} }) {
+    return { title: name, description, argsSchema: convertJsonSchemaToZod(schema) };
   }
 
   async #fetchResource(uri) {

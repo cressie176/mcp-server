@@ -2,28 +2,43 @@ class TestStore {
 
   #artifacts = {};
 
+  init() {
+  }
+
+  async reset() {
+    this.#artifacts = {};
+  }
+
   async fetch(uri) {
     return this.#artifacts[uri];
   }
 
+  resources(cb) {
+    this.#forEach('resources', cb);
+  }
+
+  prompts(cb) {
+    this.#forEach('prompts', cb);
+  }
+
+  #forEach(type, cb) {
+    Object.values(this.#artifacts).filter((entry) => entry.type === type).forEach(cb);
+  }
+
   putResource(name, contents) {
     const uri = this.buildResourceUrl(name);
-    this.#put(uri, contents);
+    this.#put(uri, { type: 'resource', contents });
     return uri;
   }
 
   putPrompt(name, contents) {
     const uri = this.buildPromptUrl(name);
-    this.#put(uri, contents);
+    this.#put(uri, { type: 'prompt', contents });
     return uri;
   }
 
-  #put(uri, contents) {
-    this.#artifacts[uri] = contents;
-  }
-
-  reset() {
-    this.#artifacts = {};
+  #put(uri, entry) {
+    this.#artifacts[uri] = entry;
   }
 
   buildResourceUrl(name) {

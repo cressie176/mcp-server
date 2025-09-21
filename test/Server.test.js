@@ -20,7 +20,6 @@ describe('Server', () => {
   });
 
   after(async () => {
-    store.reset();
     await server.stop();
   });
 
@@ -32,7 +31,7 @@ describe('Server', () => {
   });
 
   describe('resources', () => {
-    it('resources/list', async () => {
+    it('resources/list', { only: true }, async () => {
       const uri = store.putResource('code-standards', 'Code Standards Yay!');
       const resources = await client.listResources();
 
