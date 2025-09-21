@@ -1,7 +1,5 @@
 import { Writable } from 'node:stream';
-import Debug from 'debug';
-
-const debug = Debug('mcp:server');
+import Logger from '../../src/Logger.js';
 
 class TestOutputStream extends Writable {
   #queue = [];
@@ -17,7 +15,7 @@ class TestOutputStream extends Writable {
 
   #getLine(chunk) {
     const line = chunk.toString();
-    debug(line);
+    Logger.debug(`TestOutputStream: ${line}`);
     return line;
   }
 

@@ -71,6 +71,8 @@ npx --yes github:cressie176/mcp-server --repository-type github --user your-user
 - `--repository`: Repository name
 - `--ref`: Git reference (default: `heads/main`)
 - `--path`: Path within the repository (optional)
+- `--log-level`: Logging level (debug, info, warn, error, off)
+- `--log-file`: Log file path (default: debug.log)
 
 ### Local File System
 
@@ -82,6 +84,8 @@ npx --yes github:cressie176/mcp-server --repository-type filesystem --path ./pat
 
 **File System Options:**
 - `--path`: Path to the directory containing your resources and prompts
+- `--log-level`: Logging level (debug, info, warn, error, off)
+- `--log-file`: Log file path (default: debug.log)
 
 ## Repository Structure
 

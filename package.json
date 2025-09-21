@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
-    "debug": "^4.4.3",
     "lefthook": "^1.13.1",
     "nock": "^14.0.10",
     "object-path-immutable": "^4.1.2"
