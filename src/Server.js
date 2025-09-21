@@ -1,4 +1,5 @@
 import { stdin, stdout } from 'node:process';
+import { appendFileSync } from 'node:fs';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
@@ -29,9 +30,11 @@ class Server {
 
   #registerResources() {
     this.#repository.resources((resource) => {
+      const url = this.#repository.buildResourceUrl(resource.name);
+      debug(`Registering resource ${resource.name} with ${url}`);
       this.#server.registerResource(
         resource.name,
-        this.#repository.buildResourceUrl(resource.name),
+        url,
         this.#getResourceMetaData(resource),
         (uri) => this.#fetchResource(uri.href),
       );
@@ -55,6 +58,7 @@ class Server {
   }
 
   async #fetchResource(uri) {
+    debug(`Fetching resourcefrom ${uri}`);
     const text = await this.#repository.fetch(uri);
     return this.#createResource(uri, text);
   }
@@ -74,6 +78,10 @@ class Server {
     const messages = [{ role: 'user', content }];
     return { messages };
   }
+}
+
+function debug(message) {
+  appendFileSync('debug.log', `${message}\n`);
 }
 
 export default Server;
