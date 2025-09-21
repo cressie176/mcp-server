@@ -1,22 +1,26 @@
 {
-  "name": "prompts",
+  "name": "mcp-server",
   "version": "1.0.0",
-  "description": "Resuable prompts",
-  "homepage": "https://github.com/cressie176/prompts#readme",
+  "description": "Resuable mcp-server for prompts and resources",
+  "homepage": "https://github.com/cressie176/mcp-server#readme",
   "bugs": {
-    "url": "https://github.com/cressie176/prompts/issues"
-  },
-  "bin": {
-    "start": "./index.js"
+    "url": "https://github.com/cressie176/mcp-server/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cressie176/prompts.git"
+    "url": "git+https://github.com/cressie176/mcp-server.git"
   },
   "license": "ISC",
   "author": "Stephen Cresswell",
   "type": "module",
   "main": "index.js",
+  "bin": {
+    "start": "index.js"
+  },
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
   "scripts": {
     "test": "node --test",
     "test:only": "node --test --test-only",
