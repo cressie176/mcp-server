@@ -11,7 +11,7 @@ const PROMPTS = [
     name: 'code-review',
     description: 'Requests a code review',
     argsSchema: {
-      scope: z.enum(CODE_REVIEW_SCOPES).optional().describe('One of "all", "unstaged" or "staged"')
+      scope: z.enum(CODE_REVIEW_SCOPES).default('all').describe('One of "all", "unstaged" or "staged"')
     }
   },
 ];

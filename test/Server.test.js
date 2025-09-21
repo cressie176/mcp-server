@@ -42,7 +42,7 @@ describe('Server', () => {
       eq(resources[0].uri, uri);
     });
 
-    it('resources/read coding-standards', async () => {
+    it('resources/read', async () => {
       const uri = store.putResource('code-standards', 'Code Standards Yay!');
       const contents = await client.readResource(uri);
 
@@ -63,14 +63,34 @@ describe('Server', () => {
       eq(prompts[0].description, 'Requests a code review');
     });
 
-    it('prompts/get code-review', async () => {
+    it('prompts/get', async () => {
       store.putPrompt('code-review', 'Code Review Yay!');
-      const messages = await client.getPrompt('code-review');
+      const messages = await client.getPrompt('code-review', { scope: 'unstaged' });
 
       eq(messages.length, 1);
       eq(messages[0].role, 'user');
       eq(messages[0].content.type, 'text');
       eq(messages[0].content.text, 'Code Review Yay!');
+    });
+
+    it('prompts/get template with defaults', async () => {
+      store.putPrompt('code-review', 'Code Review (<%= it.scope %>)');
+      const messages = await client.getPrompt('code-review');
+
+      eq(messages.length, 1);
+      eq(messages[0].role, 'user');
+      eq(messages[0].content.type, 'text');
+      eq(messages[0].content.text, 'Code Review (all)');
+    });
+
+    it('prompts/get template with arguments', async () => {
+      store.putPrompt('code-review', 'Code Review (<%= it.scope %>)');
+      const messages = await client.getPrompt('code-review', { scope: 'unstaged' });
+
+      eq(messages.length, 1);
+      eq(messages[0].role, 'user');
+      eq(messages[0].content.type, 'text');
+      eq(messages[0].content.text, 'Code Review (unstaged)');
     });
   });
 });
