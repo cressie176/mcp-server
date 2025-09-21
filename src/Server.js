@@ -50,7 +50,7 @@ class Server {
       resource.name,
       this.#store.buildResourceUrl(resource.name),
       this.#getResourceMetaData(resource),
-      (uri) => this.#fetchResource(uri.href),
+      (uri) => this.#fetchResource(uri),
     ));
   }
 
@@ -70,9 +70,9 @@ class Server {
     return { title: name, description, argsSchema };
   }
 
-  async #fetchResource(url) {
-    const text = await this.#fetch(url);
-    return this.#createResource(url, text);
+  async #fetchResource(uri) {
+    const text = await this.#store.fetch(uri);
+    return this.#createResource(uri, text);
   }
 
   #createResource(uri, text) {
@@ -81,20 +81,15 @@ class Server {
   }
 
   async #fetchPrompt(url, args) {
-    const template = await this.#fetch(url);
-    // const text = eta.renderString(template, args)
-    return this.#createPrompt(template);
+    const template = await this.#store.fetch(url);
+    const text = eta.renderString(template, args);
+    return this.#createPrompt(text);
   }
 
   #createPrompt(text) {
     const content = { type: 'text', text };
     const messages = [{ role: 'user', content }];
     return { messages };
-  }
-
-  async #fetch(url) {
-    const response = await fetch(url);
-    return response.text();
   }
 }
 

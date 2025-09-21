@@ -6,6 +6,11 @@ class GitHub {
     this.#baseUrl = `https://raw.githubusercontent.com/${user || organisation}/${repository}/refs/heads/main`
   }
 
+  async fetch(url) {
+    const response = await fetch(url);
+    return response.text();
+  }
+
   buildResourceUrl(name) {
     return this.#buildUrl('resources', name);
   }

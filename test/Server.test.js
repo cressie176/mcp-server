@@ -1,7 +1,7 @@
 import { strictEqual as eq, match } from 'node:assert';
 import { after, before, describe, it } from 'node:test';
 import Server from '../src/Server.js';
-import GitHub from '../src/GitHub.js';
+import TestStore from './lib/TestStore.js';
 import TestInputStream from './lib/TestInputStream.js';
 import TestOutputStream from './lib/TestOutputStream.js';
 
@@ -10,7 +10,7 @@ const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/cressie176/mcp-server
 describe('Server', () => {
   const stdin = new TestInputStream();
   const stdout = new TestOutputStream();
-  const store = new GitHub({ user: 'cressie176', repository: 'mcp-server' })
+  const store = new TestStore()
   const server = new Server({ stdin, stdout, store });
 
   before(async () => {
@@ -18,6 +18,7 @@ describe('Server', () => {
   });
 
   after(async () => {
+    store.reset();
     await server.stop();
   });
 
@@ -31,30 +32,33 @@ describe('Server', () => {
 
   describe('resources', () => {
     it('resources/list', async () => {
+      store.putResource('code-standards', 'Code Standards Yay!');
       const {
         result: { resources },
       } = await request({ method: 'resources/list' });
       eq(resources.length, 1);
       eq(resources[0].name, 'code-standards');
       eq(resources[0].title, 'code-standards');
-      eq(resources[0].uri, `${GITHUB_BASE_URL}/resources/code-standards.md`);
+      eq(resources[0].uri, `test://resources/code-standards`);
     });
 
     it('resources/read coding-standards', async () => {
+      store.putResource('code-standards', 'Code Standards Yay!');
       const {
         result: { contents },
       } = await request({
         method: 'resources/read',
-        params: { uri: `${GITHUB_BASE_URL}/resources/code-standards.md` },
+        params: { uri: `test://resources/code-standards` },
       });
       eq(contents.length, 1);
-      eq(contents[0].uri, `${GITHUB_BASE_URL}/resources/code-standards.md`);
-      match(contents[0].text, /# Code Standards/);
+      eq(contents[0].uri, `test://resources/code-standards`);
+      eq(contents[0].text, 'Code Standards Yay!');
     });
   });
 
   describe('prompts', () => {
     it('prompts/list', async () => {
+      store.putPrompt('code-review', 'Code Review Yay!');
       const {
         result: { prompts },
       } = await request({ method: 'prompts/list' });
@@ -65,13 +69,14 @@ describe('Server', () => {
     });
 
     it('prompts/get code-review', async () => {
+      store.putPrompt('code-review', 'Code Review Yay!');
       const {
         result: { messages },
       } = await request({ method: 'prompts/get', params: { name: 'code-review', arguments: {} } });
       eq(messages.length, 1);
       eq(messages[0].role, 'user');
       eq(messages[0].content.type, 'text');
-      match(messages[0].content.text, /Perform a code review using the following process/);
+      eq(messages[0].content.text, 'Code Review Yay!');
     });
   });
 
