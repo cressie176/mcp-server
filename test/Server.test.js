@@ -13,7 +13,7 @@ describe('Server', () => {
 
   before(() => {
     // Keep this, and uncomment it to debug tests
-    // process.on('LOG', console.log);
+    // process.on('LOG', ({ level, message, context }) => console.log(`[${level}] ${message}${context ? ` ${JSON.stringify(context)}` : ''}`));
   });
 
   beforeEach(() => {
@@ -29,7 +29,7 @@ describe('Server', () => {
   });
 
   describe('ping', () => {
-    it('responds', { only: true }, async () => {
+    it('responds', async () => {
       await server.start();
       const { jsonrpc } = await client.ping();
       eq(jsonrpc, '2.0');

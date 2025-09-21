@@ -14,11 +14,9 @@ class Server {
 
   constructor(options) {
     const { stdin, stdout, repository } = { ...defaults, ...options };
-    const tee = new LoggingTee('STDOUT');
-    tee.pipe(stdout);
 
-    this.#stdin = stdin;
-    this.#stdout = tee;
+    this.#stdout = new LoggingTee('STDOUT').pipeTo(stdout);
+    this.#stdin = new LoggingTee('STDIN').pipeFrom(stdin);
     this.#repository = repository;
     this.#server = new McpServer({ name: 'ACME', version: '1.0.0' });
   }
@@ -39,6 +37,8 @@ class Server {
 
   async stop() {
     Logger.debug('Stopping server');
+    this.#stdin.unpipe?.();
+    this.#stdout.unpipe?.();
     await this.#server.close();
     Logger.debug('Server stopped');
   }

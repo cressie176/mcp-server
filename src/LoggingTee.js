@@ -14,6 +14,16 @@ class LoggingTee extends Transform {
     this.push(chunk);
     cb();
   }
+
+  pipeTo(destination) {
+    this.pipe(destination);
+    return this;
+  }
+
+  pipeFrom(source) {
+    source.pipe(this);
+    return this;
+  }
 }
 
 export default LoggingTee;
