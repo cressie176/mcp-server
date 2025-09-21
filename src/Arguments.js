@@ -7,6 +7,7 @@ class Arguments {
     this.#args = mri(args, options);
   }
 
+  // Allow encapsulation violation
   get(name) {
     return this.#args[name];
   }
