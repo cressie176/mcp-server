@@ -55,6 +55,9 @@ Add this to your Claude Desktop configuration:
 
 Restart Claude Desktop and your resources and prompts will be available!
 
+## Examples
+See my [prompts](https://github.com/cressie176/prompts) repository
+
 ## Usage
 
 ### GitHub Repository
