@@ -12,8 +12,7 @@ describe('Server', () => {
   let server;
 
   before(() => {
-    // Keep this, and uncomment it to debug tests
-    // process.on('LOG', ({ level, message, context }) => console.log(`[${level}] ${message}${context ? ` ${JSON.stringify(context)}` : ''}`));
+    if (process.env.DEBUG) process.on('LOG', log);
   });
 
   beforeEach(() => {
@@ -95,4 +94,14 @@ describe('Server', () => {
       eq(messages[0].content.text, 'Code Review Yay!');
     });
   });
+
+  function log({ level, message, context }) {
+    const text = formatLogEntry({ level, message, context });
+    console.log(text);
+  }
+
+  function formatLogEntry({ level, message, context }) {
+    const formattedContext = context ? ` ${JSON.stringify(context)}` : '';
+    return `[${level}] ${message}${formattedContext}`;
+  }
 });

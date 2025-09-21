@@ -7,7 +7,8 @@ class Arguments {
     this.#args = mri(args, options);
   }
 
-  // Allow encapsulation violation
+  // This method does not violate encapsulation.
+  // The arguments class exists solely as a conduit for passing configuration to other parts of the application.
   get(name) {
     return this.#args[name];
   }

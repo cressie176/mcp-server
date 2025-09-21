@@ -2,7 +2,7 @@
 
 import process from 'node:process';
 import Arguments from './src/Arguments.js';
-import Logger from './src/Logger.js';
+import * as Logger from './src/Logger.js';
 import RepositoryFactory from './src/RepositoryFactory.js';
 import Server from './src/Server.js';
 

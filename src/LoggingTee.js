@@ -1,5 +1,5 @@
 import { Transform } from 'node:stream';
-import Logger from './Logger.js';
+import * as Logger from './Logger.js';
 
 class LoggingTee extends Transform {
   #name;

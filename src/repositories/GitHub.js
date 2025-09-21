@@ -35,8 +35,8 @@ class GitHub {
   }
 
   #buildBaseUrl({ user, organisation, repository, ref = 'heads/main', path }) {
-    return ['https://raw.githubusercontent.com', user || organisation, repository, 'refs', ref, path]
-      .filter((part) => !!part)
+    return ['https://raw.githubusercontent.com', user, organisation, repository, 'refs', ref, path]
+      .filter(Boolean)
       .join('/');
   }
 

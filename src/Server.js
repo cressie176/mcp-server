@@ -1,7 +1,7 @@
 import { stdin, stdout } from 'node:process';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import Logger from './Logger.js';
+import * as Logger from './Logger.js';
 import LoggingTee from './LoggingTee.js';
 
 const defaults = { stdin, stdout };
@@ -45,31 +45,39 @@ class Server {
 
   #registerResources() {
     this.#repository.resources((resource) => {
-      const url = this.#repository.buildResourceUrl(resource.name);
-      Logger.debug(`Registering resource ${resource.name} with ${url}`);
       try {
-        this.#server.registerResource(resource.name, url, this.#getResourceMetaData(resource), async (uri) => {
-          Logger.debug(`Fetching resource ${uri.href}`);
-          return this.#fetchResource(uri.href);
-        });
+        const url = this.#repository.buildResourceUrl(resource.name);
+        this.#registerResource(resource, url);
       } catch (err) {
         Logger.error(`Error registering resource ${resource.name}`, err);
       }
     });
   }
 
+  #registerResource(resource, url) {
+    Logger.debug(`Registering resource ${resource.name} with ${url}`);
+    this.#server.registerResource(resource.name, url, this.#getResourceMetaData(resource), async (uri) => {
+      Logger.debug(`Fetching resource ${uri.href}`);
+      return this.#fetchResource(uri.href);
+    });
+  }
+
   #registerPrompts() {
     this.#repository.prompts((prompt) => {
-      Logger.debug(`Registering prompt ${prompt.name}`);
       try {
-        this.#server.registerPrompt(prompt.name, this.#getPromptMetaData(prompt), async () => {
-          const uri = this.#repository.buildPromptUrl(prompt.name);
-          Logger.debug(`Fetching prompt ${prompt.name} from ${uri}`);
-          return this.#fetchPrompt(uri);
-        });
+        this.#registerPrompt(prompt);
       } catch (err) {
         Logger.error(`Error registering prompt ${prompt.name}`, err);
       }
+    });
+  }
+
+  #registerPrompt(prompt) {
+    Logger.debug(`Registering prompt ${prompt.name}`);
+    this.#server.registerPrompt(prompt.name, this.#getPromptMetaData(prompt), async () => {
+      const uri = this.#repository.buildPromptUrl(prompt.name);
+      Logger.debug(`Fetching prompt ${prompt.name} from ${uri}`);
+      return this.#fetchPrompt(uri);
     });
   }
 
