@@ -4,8 +4,11 @@ import process from 'node:process';
 import Arguments from './src/Arguments.js';
 import RepositoryFactory from './src/RepositoryFactory.js';
 import Server from './src/Server.js';
+import { configure as configureLogging } from './src/log.js';
 
 const args = new Arguments(process.argv.slice(2));
+configureLogging({ enabled: args.get('debug') });
+
 const repository = RepositoryFactory.create(args);
 const server = new Server({ repository });
 
