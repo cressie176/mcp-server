@@ -33,7 +33,7 @@ class Server {
         resource.name,
         this.#repository.buildResourceUrl(resource.name),
         this.#getResourceMetaData(resource),
-        (uri) => this.#fetchResource(uri),
+        (uri) => this.#fetchResource(uri.href),
       );
     });
   }
@@ -55,8 +55,8 @@ class Server {
   }
 
   async #fetchResource(uri) {
-    const text = await this.#repository.fetch(uri.href);
-    return this.#createResource(uri.href, text);
+    const text = await this.#repository.fetch(uri);
+    return this.#createResource(uri, text);
   }
 
   #createResource(uri, text) {

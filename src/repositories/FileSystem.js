@@ -12,7 +12,7 @@ class FileSystem {
 
   async init() {
     const url = this.#buildUrl('index.json');
-    const text = await this.fetch(url.href);
+    const text = await this.fetch(url);
     this.#index = JSON.parse(text);
   }
 
@@ -30,11 +30,11 @@ class FileSystem {
   }
 
   buildResourceUrl(name) {
-    return this.#buildUrl(`resources/${name}.md`).href;
+    return this.#buildUrl(`resources/${name}.md`);
   }
 
   buildPromptUrl(name) {
-    return this.#buildUrl(`prompts/${name}.md`).href;
+    return this.#buildUrl(`prompts/${name}.md`);
   }
 
   #buildBasePath({ path }) {
@@ -43,7 +43,7 @@ class FileSystem {
 
   #buildUrl(relativePath) {
     const path = join(this.#basePath, relativePath);
-    return pathToFileURL(path);
+    return pathToFileURL(path).href;
   }
 }
 
