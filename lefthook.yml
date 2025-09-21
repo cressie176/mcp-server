@@ -1,0 +1,11 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      glob: "*.{js,ts,json}"
+      run: npx biome check --staged --fix {staged_files}
+    format:
+      glob: "*.{js,ts,json}"
+      run: npx biome format --write {staged_files}
+    test:
+      run: npm test
