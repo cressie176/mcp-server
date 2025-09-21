@@ -34,7 +34,7 @@ Create an `index.json` file that declares what resources and prompts are availab
 }
 ```
 
-Add this to your Claude Desktop configuration:
+Add this to your Claude configuration:
 
 ```json
 {
@@ -53,7 +53,7 @@ Add this to your Claude Desktop configuration:
 }
 ```
 
-Restart Claude Desktop and your resources and prompts will be available!
+Restart Claude and your resources and prompts will be available!
 
 ## Examples
 See my [prompts](https://github.com/cressie176/prompts) repository
