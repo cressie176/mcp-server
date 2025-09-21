@@ -9,11 +9,13 @@ class TestStore {
   putResource(name, contents) {
     const uri = this.buildResourceUrl(name);
     this.#put(uri, contents);
+    return uri;
   }
 
   putPrompt(name, contents) {
     const uri = this.buildPromptUrl(name);
     this.#put(uri, contents);
+    return uri;
   }
 
   #put(uri, contents) {
