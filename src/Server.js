@@ -25,7 +25,7 @@ class Server {
       await this.#server.connect(transport);
       log('Server started');
     } catch (err) {
-      log(`Error starting server: ${err.message}`)
+      log(`Error starting server: ${err.message}`);
     }
   }
 
@@ -44,7 +44,7 @@ class Server {
           return this.#fetchResource(uri.href);
         });
       } catch (err) {
-        log(`Error registering resource ${resource.name}: ${err.message}`)
+        log(`Error registering resource ${resource.name}: ${err.message}`);
       }
     });
   }
@@ -59,7 +59,7 @@ class Server {
           return this.#fetchPrompt(uri);
         });
       } catch (err) {
-        log(`Error registering prompt ${prompt.name}: ${err.message}`)
+        log(`Error registering prompt ${prompt.name}: ${err.message}`);
       }
     });
   }

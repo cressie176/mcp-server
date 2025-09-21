@@ -4,8 +4,10 @@ pre-commit:
     lint:
       glob: "*.{js,ts,json}"
       run: npx biome check --staged --fix {staged_files}
+      stage_fixed: true
     format:
       glob: "*.{js,ts,json}"
       run: npx biome format --write {staged_files}
+      stage_fixed: true
     test:
       run: npm test
