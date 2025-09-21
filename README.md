@@ -127,7 +127,7 @@ Your repository (whether GitHub or local file system) should follow this structu
 ```json
 {
   "mcpServers": {
-    "mcp-server": {
+    "your-server-name": {
       "command": "npx",
       "args": [
         "--yes",
@@ -147,7 +147,7 @@ Add the following to your claude configuration file:
 ```json
 {
   "mcpServers": {
-    "mcp-server": {
+    "your-server-name": {
       "command": "npx",
       "args": [
         "--yes",
