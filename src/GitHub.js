@@ -21,7 +21,7 @@ class GitHub {
     this.#index.resources?.forEach(cb);
   }
 
-  prompts() {
+  prompts(cb) {
     this.#index.prompts?.forEach(cb);
   }
 
@@ -39,7 +39,7 @@ class GitHub {
   }
 
   #buildUrl(path) {
-    `${this.#baseUrl}/${path}`;
+    return `${this.#baseUrl}/${path}`;
   }
 }
 

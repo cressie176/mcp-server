@@ -36,10 +36,11 @@ class TestClient {
   }
 
   async #request(operation) {
-    const reply = this.#stdout.waitForReply();
-    const json = JSON.stringify({ jsonrpc: '2.0', id: this.#count++, ...operation });
+    const json = JSON.stringify({ jsonrpc: '2.0', id: ++this.#count, ...operation });
     this.#stdin.request(json);
-    return reply;
+    const response = await this.#stdout.waitForReply();
+    if (response.error) throw new Error(response.error.message);
+    return response;
   }
 }
 

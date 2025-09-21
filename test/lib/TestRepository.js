@@ -1,8 +1,8 @@
-class TestStore {
+class TestRepository {
 
   #artifacts = {};
 
-  init() {
+  async init() {
   }
 
   async reset() {
@@ -10,7 +10,8 @@ class TestStore {
   }
 
   async fetch(uri) {
-    return this.#artifacts[uri];
+    console.log('FETCHING', uri)
+    return this.#artifacts[uri].content;
   }
 
   resources(cb) {
@@ -54,4 +55,4 @@ class TestStore {
   }
 }
 
-export default TestStore;
+export default TestRepository;

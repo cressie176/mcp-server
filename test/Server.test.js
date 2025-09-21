@@ -1,18 +1,16 @@
 import { strictEqual as eq, match } from 'node:assert';
 import { after, before, describe, it } from 'node:test';
 import Server from '../src/Server.js';
-import TestStore from './lib/TestStore.js';
 import TestInputStream from './lib/TestInputStream.js';
 import TestOutputStream from './lib/TestOutputStream.js';
 import TestClient from './lib/TestClient.js';
-
-const GITHUB_BASE_URL = 'https://raw.githubusercontent.com/cressie176/mcp-server/refs/heads/main';
+import TestRepository from './lib/TestRepository.js';
 
 describe('Server', () => {
   const stdin = new TestInputStream();
   const stdout = new TestOutputStream();
-  const store = new TestStore()
-  const server = new Server({ stdin, stdout, store });
+  const repository = new TestRepository()
+  const server = new Server({ stdin, stdout, repository });
   const client = new TestClient({ stdin, stdout });
 
   before(async () => {
@@ -32,7 +30,7 @@ describe('Server', () => {
 
   describe('resources', () => {
     it('resources/list', { only: true }, async () => {
-      const uri = store.putResource('code-standards', 'Code Standards Yay!');
+      const uri = repository.putResource('code-standards', 'Code Standards Yay!');
       const resources = await client.listResources();
 
       eq(resources.length, 1);
@@ -42,7 +40,7 @@ describe('Server', () => {
     });
 
     it('resources/read', async () => {
-      const uri = store.putResource('code-standards', 'Code Standards Yay!');
+      const uri = repository.putResource('code-standards', 'Code Standards Yay!');
       const contents = await client.readResource(uri);
 
       eq(contents.length, 1);
@@ -53,7 +51,7 @@ describe('Server', () => {
 
   describe('prompts', () => {
     it('prompts/list', async () => {
-      store.putPrompt('code-review', 'Code Review Yay!');
+      repository.putPrompt('code-review', 'Code Review Yay!');
       const prompts = await client.listPrompts();
 
       eq(prompts.length, 1);
@@ -63,7 +61,7 @@ describe('Server', () => {
     });
 
     it('prompts/get', async () => {
-      store.putPrompt('code-review', 'Code Review Yay!');
+      repository.putPrompt('code-review', 'Code Review Yay!');
       const messages = await client.getPrompt('code-review', { scope: 'unstaged' });
 
       eq(messages.length, 1);
@@ -73,7 +71,7 @@ describe('Server', () => {
     });
 
     it('prompts/get template with defaults', async () => {
-      store.putPrompt('code-review', 'Code Review (<%= it.scope %>)');
+      repository.putPrompt('code-review', 'Code Review (<%= it.scope %>)');
       const messages = await client.getPrompt('code-review');
 
       eq(messages.length, 1);
@@ -83,7 +81,7 @@ describe('Server', () => {
     });
 
     it('prompts/get template with arguments', async () => {
-      store.putPrompt('code-review', 'Code Review (<%= it.scope %>)');
+      repository.putPrompt('code-review', 'Code Review (<%= it.scope %>)');
       const messages = await client.getPrompt('code-review', { scope: 'unstaged' });
 
       eq(messages.length, 1);
