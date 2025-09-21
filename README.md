@@ -122,6 +122,26 @@ Your repository (whether GitHub or local file system) should follow this structu
 
 ## Claude Configuration
 
+### GitHub repositories:
+
+```json
+{
+  "mcpServers": {
+    "mcp-server": {
+      "command": "npx",
+      "args": [
+        "--yes",
+        "github:cressie176/mcp-server"
+        "--repository-type", "github",
+        "--user", "your-username",
+        "--repository", "your-repo"
+      ]
+    }
+  }
+}
+```
+
+### FileSystem Repositories
 Add the following to your claude configuration file:
 
 ```json
@@ -136,25 +156,6 @@ Add the following to your claude configuration file:
         "filesystem",
         "--path",
         "/path/to/your/data"
-      ]
-    }
-  }
-}
-```
-
-For GitHub repositories:
-
-```json
-{
-  "mcpServers": {
-    "mcp-server": {
-      "command": "npx",
-      "args": [
-        "--yes",
-        "github:cressie176/mcp-server"
-        "--repository-type", "github",
-        "--user", "your-username",
-        "--repository", "your-repo"
       ]
     }
   }
