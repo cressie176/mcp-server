@@ -1,7 +1,6 @@
 import mri from 'mri';
 
 class Arguments {
-
   #args;
 
   constructor(args, options = {}) {
@@ -10,7 +9,7 @@ class Arguments {
 
   filter(allowed) {
     return allowed.reduce((args, name) => {
-      return this.#args[name] ? { ...args, [name]: this.#args[name] } : args
+      return this.#args[name] ? { ...args, [name]: this.#args[name] } : args;
     }, {});
   }
 }

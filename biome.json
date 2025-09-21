@@ -22,6 +22,9 @@
       },
       "suspicious": {
         "useIterableCallbackReturn": "off"
+      },
+      "performance": {
+        "noAccumulatingSpread": "off"
       }
     }
   },

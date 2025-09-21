@@ -1,9 +1,7 @@
 class TestRepository {
-
   #artifacts = {};
 
-  async init() {
-  }
+  async init() {}
 
   async fetch(uri) {
     return this.#artifacts[uri].content;
@@ -18,7 +16,9 @@ class TestRepository {
   }
 
   #forEach(type, cb) {
-    Object.values(this.#artifacts).filter((entry) => entry.type === type).forEach(cb);
+    Object.values(this.#artifacts)
+      .filter((entry) => entry.type === type)
+      .forEach(cb);
   }
 
   putResource(resource) {

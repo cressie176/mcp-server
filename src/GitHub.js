@@ -1,10 +1,9 @@
 class GitHub {
-
   #baseUrl;
   #index = {};
 
-  constructor({ user, organisation, repository, ref = 'heads/main', path }) {
-    this.#baseUrl = ['https://raw.githubusercontent.com', user || organisation, repository, 'refs', ref, path].join('/');
+  constructor(config) {
+    this.#baseUrl = this.#buildBaseUrl(config);
   }
 
   async init() {
@@ -23,6 +22,7 @@ class GitHub {
 
   async fetch(url) {
     const response = await fetch(url);
+    if (!response.ok) throw new Error(`${url} ${response.status}`);
     return response.text();
   }
 
@@ -32,6 +32,10 @@ class GitHub {
 
   buildPromptUrl(name) {
     return this.#buildUrl(`prompts/${name}.md`);
+  }
+
+  #buildBaseUrl({ user, organisation, repository, ref = 'heads/main', path }) {
+    return ['https://raw.githubusercontent.com', user || organisation, repository, 'refs', ref, path].join('/');
   }
 
   #buildUrl(path) {

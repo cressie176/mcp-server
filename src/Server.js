@@ -34,17 +34,15 @@ class Server {
         this.#repository.buildResourceUrl(resource.name),
         this.#getResourceMetaData(resource),
         (uri) => this.#fetchResource(uri),
-      )
+      );
     });
   }
 
   #registerPrompts() {
     this.#repository.prompts((prompt) => {
-      this.#server.registerPrompt(
-        prompt.name,
-        this.#getPromptMetaData(prompt),
-        () => this.#fetchPrompt(this.#repository.buildPromptUrl(prompt.name)),
-      )
+      this.#server.registerPrompt(prompt.name, this.#getPromptMetaData(prompt), () =>
+        this.#fetchPrompt(this.#repository.buildPromptUrl(prompt.name)),
+      );
     });
   }
 

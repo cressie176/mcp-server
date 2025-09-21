@@ -1,8 +1,4 @@
 {
-  "resources": [
-    { "name": "code-standards", "description": "The latest ACME coding standards" }
-  ],
-  "prompts": [
-    { "name": "code-review", "description": "Requests a code review" }
-  ]
+  "resources": [{ "name": "code-standards", "description": "The latest ACME coding standards" }],
+  "prompts": [{ "name": "code-review", "description": "Requests a code review" }]
 }

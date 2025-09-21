@@ -1,5 +1,4 @@
 class TestClient {
-
   #stdin;
   #stdout;
   #count = 0;
@@ -10,7 +9,7 @@ class TestClient {
   }
 
   async ping() {
-    return this.#request({ method: 'ping' })
+    return this.#request({ method: 'ping' });
   }
 
   async listResources() {
@@ -30,7 +29,7 @@ class TestClient {
   }
 
   async getPrompt(name, args = {}) {
-    const params = { name, arguments: args }
+    const params = { name, arguments: args };
     const { result } = await this.#request({ method: 'prompts/get', params });
     return result.messages;
   }

@@ -1,9 +1,9 @@
 import { strictEqual as eq } from 'node:assert';
-import { beforeEach, afterEach, describe, it } from 'node:test';
+import { afterEach, beforeEach, describe, it } from 'node:test';
 import Server from '../src/Server.js';
+import TestClient from './lib/TestClient.js';
 import TestInputStream from './lib/TestInputStream.js';
 import TestOutputStream from './lib/TestOutputStream.js';
-import TestClient from './lib/TestClient.js';
 import TestRepository from './lib/TestRepository.js';
 
 describe('Server', () => {
@@ -16,8 +16,8 @@ describe('Server', () => {
     const stdout = new TestOutputStream();
     client = new TestClient({ stdin, stdout });
     repository = new TestRepository();
-    server = new Server({ stdin, stdout, repository })
-  })
+    server = new Server({ stdin, stdout, repository });
+  });
 
   afterEach(async () => {
     await server.stop();
@@ -33,7 +33,11 @@ describe('Server', () => {
 
   describe('resources', () => {
     it('resources/list', async () => {
-      const uri = repository.putResource({ name: 'code-standards', description: 'Code Standards', content: 'Code Standards Yay!' });
+      const uri = repository.putResource({
+        name: 'code-standards',
+        description: 'Code Standards',
+        content: 'Code Standards Yay!',
+      });
       await server.start();
 
       const resources = await client.listResources();
@@ -47,7 +51,11 @@ describe('Server', () => {
     });
 
     it('resources/read', async () => {
-      const uri = repository.putResource({ name: 'code-standards', description: 'Code Standards', content: 'Code Standards Yay!' });
+      const uri = repository.putResource({
+        name: 'code-standards',
+        description: 'Code Standards',
+        content: 'Code Standards Yay!',
+      });
       await server.start();
       const contents = await client.readResource(uri);
 
