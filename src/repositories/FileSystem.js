@@ -29,12 +29,12 @@ class FileSystem {
     return readFileSync(path, 'utf8');
   }
 
-  buildResourceUrl(name) {
-    return this.#buildUrl(`resources/${name}.md`);
+  buildResourceUrl(path) {
+    return this.#buildUrl(`resources/${path}`);
   }
 
-  buildPromptUrl(name) {
-    return this.#buildUrl(`prompts/${name}.md`);
+  buildPromptUrl(path) {
+    return this.#buildUrl(`prompts/${path}`);
   }
 
   #buildBasePath({ path }) {

@@ -1,5 +1,5 @@
 import { transformSync } from 'esbuild';
-import { render as renderInk, Text } from 'ink';
+import { Box, render as renderInk, Text } from 'ink';
 import React from 'react';
 import { WritableStreamBuffer } from 'stream-buffers';
 import { z } from 'zod';
@@ -49,6 +49,7 @@ async function createReactComponent(code) {
   // Global assignment required as workaround - React/Text must be available globally for dynamic import
   global.React = React;
   global.Text = Text;
+  global.Box = Box;
 
   const dataUrl = `data:text/javascript;base64,${Buffer.from(code).toString('base64')}`;
   const { default: Template } = await import(dataUrl);

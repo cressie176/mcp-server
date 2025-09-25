@@ -19,6 +19,7 @@ describe('FileSystem', () => {
 
       eq(resources.length, 1);
       eq(resources[0].name, 'code-standards');
+      eq(resources[0].path, 'code-standards.md');
       eq(resources[0].description, 'Code Standards');
     });
   });
@@ -31,6 +32,7 @@ describe('FileSystem', () => {
 
       eq(prompts.length, 1);
       eq(prompts[0].name, 'code-review');
+      eq(prompts[0].path, 'code-review.md');
       eq(prompts[0].description, 'Code Review');
     });
   });
@@ -38,7 +40,7 @@ describe('FileSystem', () => {
   describe('fetch', () => {
     it('reads file content', async () => {
       await repository.init();
-      const resourcePath = repository.buildResourceUrl('code-standards');
+      const resourcePath = repository.buildResourceUrl('code-standards.md');
       const content = await repository.fetch(resourcePath);
 
       eq(content.includes('# Code Standards'), true);
@@ -48,14 +50,14 @@ describe('FileSystem', () => {
 
   describe('buildResourceUrl', () => {
     it('builds resource path', () => {
-      const path = repository.buildResourceUrl('code-standards');
-      eq(path.endsWith('test/data/resources/code-standards.md'), true);
+      const path = repository.buildResourceUrl('documents/code-standards.md');
+      eq(path.endsWith('test/data/resources/documents/code-standards.md'), true);
     });
   });
 
   describe('buildPromptUrl', () => {
     it('builds prompt path', () => {
-      const path = repository.buildPromptUrl('code-review');
+      const path = repository.buildPromptUrl('code-review.md');
       eq(path.endsWith('test/data/prompts/code-review.md'), true);
     });
   });

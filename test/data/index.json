@@ -2,12 +2,14 @@
   "resources": [
     {
       "name": "code-standards",
+      "path": "code-standards.md",
       "description": "Code Standards"
     }
   ],
   "prompts": [
     {
       "name": "code-review",
+      "path": "code-review.md",
       "description": "Code Review"
     }
   ]

@@ -39,6 +39,7 @@ describe('Server', () => {
     it('resources/list', async () => {
       const uri = repository.putResource({
         name: 'code-standards',
+        path: 'code-standards.md',
         description: 'Code Standards',
         content: 'Code Standards Yay!',
       });
@@ -51,12 +52,13 @@ describe('Server', () => {
       eq(resources[0].title, 'code-standards');
       eq(resources[0].description, 'Code Standards');
       eq(resources[0].mimeType, 'text/markdown');
-      eq(resources[0].uri, uri);
+      eq(resources[0].uri, 'test://resources/code-standards.md');
     });
 
     it('resources/read', async () => {
       const uri = repository.putResource({
         name: 'code-standards',
+        path: 'code-standards.md',
         description: 'Code Standards',
         content: 'Code Standards Yay!',
       });
@@ -64,18 +66,23 @@ describe('Server', () => {
       const contents = await client.readResource(uri);
 
       eq(contents.length, 1);
-      eq(contents[0].uri, uri);
+      eq(contents[0].uri, 'test://resources/code-standards.md');
       eq(contents[0].text, 'Code Standards Yay!');
     });
   });
 
   describe('prompts', () => {
     it('prompts/list', async () => {
-      repository.putPrompt({ name: 'code-review', description: 'Code Review', content: 'Code Review Yay!' });
+      repository.putPrompt({
+        name: 'code-review',
+        path: 'code-review.md',
+        description: 'Code Review',
+        content: 'Code Review Yay!',
+      });
       await server.start();
 
       const prompts = await client.listPrompts();
-
+      console.log({ prompts });
       eq(prompts.length, 1);
       eq(prompts[0].name, 'code-review');
       eq(prompts[0].title, 'code-review');
@@ -83,7 +90,12 @@ describe('Server', () => {
     });
 
     it('prompts/get', async () => {
-      repository.putPrompt({ name: 'code-review', description: 'Code Review', content: 'Code Review Yay!' });
+      repository.putPrompt({
+        name: 'code-review',
+        path: 'code-review.md',
+        description: 'Code Review',
+        content: 'Code Review Yay!',
+      });
       await server.start();
 
       const messages = await client.getPrompt('code-review', { scope: 'unstaged' });
@@ -143,7 +155,7 @@ describe('Server', () => {
       );
     });
 
-    it('RenderTemplate missing data argument', { only: true }, async () => {
+    it('RenderTemplate missing data argument', async () => {
       await server.start();
 
       await rejects(
@@ -185,7 +197,6 @@ describe('Server', () => {
 
   function log({ level, message, context }) {
     const text = formatLogEntry({ level, message, context });
-    console.log(text);
   }
 
   function formatLogEntry({ level, message, context }) {

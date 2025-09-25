@@ -51,7 +51,7 @@ class Server {
   #registerResources() {
     this.#repository.resources((resource) => {
       try {
-        const url = this.#repository.buildResourceUrl(resource.name);
+        const url = this.#repository.buildResourceUrl(resource.path);
         this.#registerResource(resource, url);
       } catch (err) {
         Logger.error(`Error registering resource ${resource.name}`, err);
@@ -80,8 +80,8 @@ class Server {
   #registerPrompt(prompt) {
     Logger.info(`Registering prompt ${prompt.name}`);
     this.#server.registerPrompt(prompt.name, this.#getPromptMetaData(prompt), async () => {
-      const uri = this.#repository.buildPromptUrl(prompt.name);
-      Logger.info(`Fetching prompt ${prompt.name} from ${uri}`);
+      const uri = this.#repository.buildPromptUrl(prompt.path);
+      Logger.info(`Fetching prompt ${prompt.name} from ${uri}`, { prompt });
       return this.#fetchPrompt(uri);
     });
   }

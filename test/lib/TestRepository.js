@@ -22,13 +22,13 @@ class TestRepository {
   }
 
   putResource(resource) {
-    const uri = this.buildResourceUrl(resource.name);
+    const uri = this.buildResourceUrl(resource.path);
     this.#put(uri, { type: 'resource', ...resource });
     return uri;
   }
 
   putPrompt(prompt) {
-    const uri = this.buildPromptUrl(prompt.name);
+    const uri = this.buildPromptUrl(prompt.path);
     this.#put(uri, { type: 'prompt', ...prompt });
     return uri;
   }
@@ -37,16 +37,16 @@ class TestRepository {
     this.#artifacts[uri] = entry;
   }
 
-  buildResourceUrl(name) {
-    return this.#buildUrl('resources', name);
+  buildResourceUrl(path) {
+    return this.#buildUrl('resources', path);
   }
 
-  buildPromptUrl(name) {
-    return this.#buildUrl('prompts', name);
+  buildPromptUrl(path) {
+    return this.#buildUrl('prompts', path);
   }
 
-  #buildUrl(type, name) {
-    return `test://${type}/${name}`;
+  #buildUrl(type, path) {
+    return `test://${type}/${path}`;
   }
 }
 

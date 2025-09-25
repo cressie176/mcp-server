@@ -35,7 +35,9 @@ describe('GitHub', () => {
 
   describe('resources', () => {
     it('iterates over resources', async () => {
-      const index = op.set(emptyIndex, 'resources', [{ name: 'code-standards', description: 'Code Standards' }]);
+      const index = op.set(emptyIndex, 'resources', [
+        { name: 'code-standards', path: 'code-standards.md', description: 'Code Standards' },
+      ]);
       stubIndex(index);
 
       await repository.init();
@@ -44,13 +46,16 @@ describe('GitHub', () => {
 
       eq(resources.length, 1);
       eq(resources[0].name, 'code-standards');
+      eq(resources[0].path, 'code-standards.md');
       eq(resources[0].description, 'Code Standards');
     });
   });
 
   describe('prompts', () => {
     it('iterates over prompts', async () => {
-      const index = op.set(emptyIndex, 'prompts', [{ name: 'code-review', description: 'Code Review' }]);
+      const index = op.set(emptyIndex, 'prompts', [
+        { name: 'code-review', path: 'code-standards.md', description: 'Code Review' },
+      ]);
 
       stubIndex(index);
 
@@ -60,6 +65,7 @@ describe('GitHub', () => {
 
       eq(prompts.length, 1);
       eq(prompts[0].name, 'code-review');
+      eq(prompts[0].path, 'code-standards.md');
       eq(prompts[0].description, 'Code Review');
     });
   });
@@ -70,7 +76,7 @@ describe('GitHub', () => {
       stubFile('resources/code-standards.md', '# Code Standards\n\nThese are the test code standards.');
 
       await repository.init();
-      const url = repository.buildResourceUrl('code-standards');
+      const url = repository.buildResourceUrl('code-standards.md');
       const content = await repository.fetch(url);
 
       eq(content.includes('# Code Standards'), true);
@@ -80,7 +86,7 @@ describe('GitHub', () => {
     it('throws error on HTTP failure', async () => {
       scope.get('/testuser/testrepo/refs/heads/main/testpath/resources/missing.md').reply(404, 'Not Found');
 
-      const url = repository.buildResourceUrl('missing');
+      const url = repository.buildResourceUrl('missing.md');
       await rejects(
         () => repository.fetch(url),
         (err) => {
@@ -93,73 +99,73 @@ describe('GitHub', () => {
 
   describe('buildResourceUrl', () => {
     it('builds resource URL', () => {
-      const url = repository.buildResourceUrl('code-standards');
+      const url = repository.buildResourceUrl('documents/code-standards.md');
       eq(
         url,
-        'https://raw.githubusercontent.com/testuser/testrepo/refs/heads/main/testpath/resources/code-standards.md',
+        'https://raw.githubusercontent.com/testuser/testrepo/refs/heads/main/testpath/resources/documents/code-standards.md',
       );
     });
 
     it('uses default ref when not specified', () => {
       const repo = new GitHub({ user: 'testuser', repository: 'testrepo' });
 
-      const url = repo.buildResourceUrl('test');
+      const url = repo.buildResourceUrl('test.md');
       match(url, /refs\/heads\/main/);
     });
 
     it('uses custom ref when specified', () => {
       const repo = new GitHub({ user: 'testuser', repository: 'testrepo', ref: 'tags/stable' });
 
-      const url = repo.buildResourceUrl('test');
+      const url = repo.buildResourceUrl('test.md');
       match(url, /refs\/tags\/stable/);
     });
 
     it('uses organisation instead of user', () => {
       const repo = new GitHub({ organisation: 'testorg', repository: 'testrepo' });
 
-      const url = repo.buildResourceUrl('test');
+      const url = repo.buildResourceUrl('test.md');
       match(url, /testorg\/testrepo/);
     });
 
     it('handles missing path parameter', () => {
       const repo = new GitHub({ user: 'testuser', repository: 'testrepo' });
 
-      const url = repo.buildResourceUrl('test');
+      const url = repo.buildResourceUrl('test.md');
       match(url, /testrepo\/refs\/heads\/main\/resources\/test\.md$/);
     });
   });
 
   describe('buildPromptUrl', () => {
     it('builds prompt URL', () => {
-      const url = repository.buildPromptUrl('code-review');
+      const url = repository.buildPromptUrl('code-review.md');
       eq(url, 'https://raw.githubusercontent.com/testuser/testrepo/refs/heads/main/testpath/prompts/code-review.md');
     });
 
     it('uses default ref when not specified', () => {
       const repo = new GitHub({ user: 'testuser', repository: 'testrepo' });
 
-      const url = repo.buildPromptUrl('test');
+      const url = repo.buildPromptUrl('test.md');
       match(url, /refs\/heads\/main/);
     });
 
     it('uses custom ref when specified', () => {
       const repo = new GitHub({ user: 'testuser', repository: 'testrepo', ref: 'tags/stable' });
 
-      const url = repo.buildPromptUrl('test');
+      const url = repo.buildPromptUrl('test.md');
       match(url, /refs\/tags\/stable/);
     });
 
     it('uses organisation instead of user', () => {
       const repo = new GitHub({ organisation: 'testorg', repository: 'testrepo' });
 
-      const url = repo.buildPromptUrl('test');
+      const url = repo.buildPromptUrl('test.md');
       match(url, /testorg\/testrepo/);
     });
 
     it('handles missing path parameter', () => {
       const repo = new GitHub({ user: 'testuser', repository: 'testrepo' });
 
-      const url = repo.buildPromptUrl('test');
+      const url = repo.buildPromptUrl('test.md');
       match(url, /testrepo\/refs\/heads\/main\/prompts\/test\.md$/);
     });
   });
