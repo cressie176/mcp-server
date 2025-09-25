@@ -34,6 +34,12 @@ class TestClient {
     return result.messages;
   }
 
+  async callTool(name, arguments_) {
+    const params = { name, arguments: arguments_ };
+    const { result } = await this.#request({ method: 'tools/call', params });
+    return result.content;
+  }
+
   async #request(operation) {
     const json = JSON.stringify({ jsonrpc: '2.0', id: ++this.#count, ...operation });
     this.#stdin.request(json);
