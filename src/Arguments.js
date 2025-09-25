@@ -3,8 +3,15 @@ import mri from 'mri';
 class Arguments {
   #args;
 
-  constructor(args, options = {}) {
-    this.#args = mri(args, options);
+  constructor(args) {
+    this.#args = mri(args, {
+      alias: {
+        repositoryType: 'repository-type',
+        logLevel: 'log-level',
+        logFile: 'log-file',
+        user: 'organisation',
+      },
+    });
   }
 
   // This method does not violate encapsulation.

@@ -120,13 +120,6 @@ describe('GitHub', () => {
       match(url, /refs\/tags\/stable/);
     });
 
-    it('uses organisation instead of user', () => {
-      const repo = new GitHub({ organisation: 'testorg', repository: 'testrepo' });
-
-      const url = repo.buildResourceUrl('test.md');
-      match(url, /testorg\/testrepo/);
-    });
-
     it('handles missing path parameter', () => {
       const repo = new GitHub({ user: 'testuser', repository: 'testrepo' });
 
@@ -153,13 +146,6 @@ describe('GitHub', () => {
 
       const url = repo.buildPromptUrl('test.md');
       match(url, /refs\/tags\/stable/);
-    });
-
-    it('uses organisation instead of user', () => {
-      const repo = new GitHub({ organisation: 'testorg', repository: 'testrepo' });
-
-      const url = repo.buildPromptUrl('test.md');
-      match(url, /testorg\/testrepo/);
     });
 
     it('handles missing path parameter', () => {

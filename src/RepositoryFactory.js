@@ -4,7 +4,7 @@ import GitHub from './repositories/GitHub.js';
 class RepositoryFactory {
   static #repositories = new Map([
     ['filesystem', (args) => new FileSystem(args.filter(['path']))],
-    ['github', (args) => new GitHub(args.filter(['user', 'organisation', 'repository', 'ref', 'path']))],
+    ['github', (args) => new GitHub(args.filter(['user', 'repository', 'ref', 'path']))],
   ]);
 
   static create(args) {

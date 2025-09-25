@@ -34,10 +34,8 @@ class GitHub {
     return this.#buildUrl(`prompts/${path}`);
   }
 
-  #buildBaseUrl({ user, organisation, repository, ref = 'heads/main', path }) {
-    return ['https://raw.githubusercontent.com', user, organisation, repository, 'refs', ref, path]
-      .filter(Boolean)
-      .join('/');
+  #buildBaseUrl({ user, repository, ref = 'heads/main', path }) {
+    return ['https://raw.githubusercontent.com', user, repository, 'refs', ref, path].filter(Boolean).join('/');
   }
 
   #buildUrl(path) {
