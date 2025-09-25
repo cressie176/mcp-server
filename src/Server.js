@@ -3,7 +3,6 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import * as Logger from './Logger.js';
 import LoggingTee from './LoggingTee.js';
-import * as RenderInk from './tools/RenderInk.js';
 
 const defaults = { stdin, stdout };
 
@@ -27,7 +26,6 @@ class Server {
       await this.#repository.init();
       this.#registerResources();
       this.#registerPrompts();
-      this.#registerTools();
       await this.#connect();
       Logger.info('Server started');
     } catch (err) {
@@ -113,10 +111,6 @@ class Server {
     const content = { type: 'text', text };
     const messages = [{ role: 'user', content }];
     return { messages };
-  }
-
-  #registerTools() {
-    RenderInk.register(this.#server);
   }
 }
 
