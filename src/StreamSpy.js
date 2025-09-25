@@ -1,7 +1,7 @@
 import { Transform } from 'node:stream';
 import * as Logger from './Logger.js';
 
-class LoggingTee extends Transform {
+class StreamSpy extends Transform {
   #name;
 
   constructor(name) {
@@ -26,4 +26,4 @@ class LoggingTee extends Transform {
   }
 }
 
-export default LoggingTee;
+export default StreamSpy;
