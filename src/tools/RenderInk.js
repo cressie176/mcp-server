@@ -45,6 +45,8 @@ function compileJsx(jsx) {
 }
 
 async function createReactComponent(code) {
+  // Node.js data: URL imports cannot resolve ES module specifiers like "react" or "ink"
+  // Global assignment required as workaround - React/Text must be available globally for dynamic import
   global.React = React;
   global.Text = Text;
 

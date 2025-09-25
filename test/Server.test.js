@@ -1,4 +1,4 @@
-import { strictEqual as eq, match } from 'node:assert';
+import { strictEqual as eq, match, rejects } from 'node:assert';
 import { afterEach, before, beforeEach, describe, it } from 'node:test';
 import Server from '../src/Server.js';
 import TestClient from './lib/TestClient.js';
@@ -124,6 +124,63 @@ describe('Server', () => {
         /JSX compilation error: Transform failed with 1 error:\n<stdin>:\d+:\d+: ERROR: Expected ">" but found "\)"/,
       );
     });
+
+    it('RenderTemplate missing template argument', async () => {
+      await server.start();
+
+      await rejects(
+        () => client.callTool('RenderInk', { data: JSON.stringify({ name: 'Steve' }) }),
+        (err) => {
+          match(err.message, /Invalid arguments for tool RenderInk/);
+          const validationError = parseValidationError(err.message);
+          eq(validationError.code, 'invalid_type');
+          eq(validationError.expected, 'string');
+          eq(validationError.received, 'undefined');
+          eq(validationError.path[0], 'template');
+          eq(validationError.message, 'Required');
+          return true;
+        },
+      );
+    });
+
+    it('RenderTemplate missing data argument', { only: true }, async () => {
+      await server.start();
+
+      await rejects(
+        () => client.callTool('RenderInk', { template: '<Text>Hello {props.name}!</Text>' }),
+        (err) => {
+          match(err.message, /Invalid arguments for tool RenderInk/);
+          const validationError = parseValidationError(err.message);
+          eq(validationError.code, 'invalid_type');
+          eq(validationError.expected, 'string');
+          eq(validationError.received, 'undefined');
+          eq(validationError.path[0], 'data');
+          eq(validationError.message, 'Required');
+          return true;
+        },
+      );
+    });
+
+    it('RenderTemplate runtime error', async () => {
+      await server.start();
+
+      const content = await client.callTool('RenderInk', {
+        template: '<Text>Hello {props.undefined.property}!</Text>',
+        data: JSON.stringify({ name: 'Steve' }),
+      });
+
+      eq(content.length, 1);
+      eq(content[0].type, 'text');
+      match(content[0].text, /Cannot read properties of undefined/);
+    });
+
+    function parseValidationError(message) {
+      const details = message
+        .replace('MCP error -32602: Invalid arguments for tool RenderInk: ', '')
+        .replace(/\n/g, ' ')
+        .replace(/\s+/g, ' ');
+      return JSON.parse(details)[0];
+    }
   });
 
   function log({ level, message, context }) {
