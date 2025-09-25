@@ -2,7 +2,7 @@ import { stdin, stdout } from 'node:process';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import * as Logger from './Logger.js';
-import LoggingTee from './LoggingTee.js';
+import StreamSpy from './StreamSpy.js';
 
 const defaults = { stdin, stdout };
 
@@ -14,8 +14,8 @@ class Server {
 
   constructor(options) {
     const { stdin, stdout, repository } = { ...defaults, ...options };
-    this.#stdout = new LoggingTee('STDOUT').pipeTo(stdout);
-    this.#stdin = new LoggingTee('STDIN').pipeFrom(stdin);
+    this.#stdout = new StreamSpy('STDOUT').pipeTo(stdout);
+    this.#stdin = new StreamSpy('STDIN').pipeFrom(stdin);
     this.#repository = repository;
     this.#server = new McpServer({ name: 'ACME', version: '1.0.0' });
   }

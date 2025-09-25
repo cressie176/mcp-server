@@ -24,9 +24,7 @@ export function error(message, context) {
   process.emit('LOG', { level: 'ERROR', message, context });
 }
 
-export function log(message, context) {
-  process.emit('LOG', { level: 'INFO', message, context });
-}
+export const log = info;
 
 export function createWriter(level, logFile = 'debug.log') {
   const threshold = LOG_LEVELS[level?.toUpperCase()] ?? LOG_LEVELS.ERROR;
